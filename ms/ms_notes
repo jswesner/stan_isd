@@ -1,0 +1,14 @@
+How should xmin and xmax be calculated? Should they be the min/max sizes in a single surber sample, at a single stream over all years and collections, at a single stream in a single year, or across all NEON collections?
+
+So far, I have been using the minimum and maximum size per surber sample, which I think we used in Pomeranz et al. (2022), but am considering switching to the minimum/maximum across all samples within a given NEON site (i.e., there would be 24 values of xmin because there are 24 streams). Alternatiely, we could use just one global xmin and one global xmas. Here is what the literature says:
+
+"...minimum and maximum possible values of the data" Edwards et al. 2020 and 2017 and Sutton et al. 2020
+"...minimum and maximum attainable values" White et al. 2008 (who has a whole paragraph describing xmin and xmax selection, but without a concrete example of how to calculate them.)
+"...minimum and maximum attainable values" (Sutton et al. 2020)
+"...minimum and maximum observed in a collection" (Pomeranz et al. 2022)
+"...minimum value for which a power law holds" (Clauset 2007)
+"to find both the best-fit minimum size, xmin, to which a power-law applies...using the plfit
+function implemented in R (http://tuvalu.santafe.edu/~aaronc/powerlaws/plfit.r)." (Perkins et al. 2019)
+
+
+One of the issues here is that most of these studies are selecting xmin and xmax for single samples. Thus, it is unclear whether words like "maximum attainable" or "maximum possible" or "data" refer to values within the samples or within the site or within any potential set of sites that are like the current sample. This may be another opportunity for simulation. In general, though, all methods seem to be referring to a more general xmin and xmax that apply to a theoretical distribution. That may come most easily in our data from using a global xmin and xmax. 
