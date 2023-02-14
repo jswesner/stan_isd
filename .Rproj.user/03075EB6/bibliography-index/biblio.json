@@ -1,6 +1,69 @@
 {
     "sources": [
         {
+            "author": [
+                {
+                    "family": "Dietze",
+                    "given": "Michael C"
+                },
+                {
+                    "family": "Fox",
+                    "given": "Andrew"
+                },
+                {
+                    "family": "Beck-Johnson",
+                    "given": "Lindsay M"
+                },
+                {
+                    "family": "Betancourt",
+                    "given": "Julio L"
+                },
+                {
+                    "family": "Hooten",
+                    "given": "Mevin B"
+                },
+                {
+                    "family": "Jarnevich",
+                    "given": "Catherine S"
+                },
+                {
+                    "family": "Keitt",
+                    "given": "Timothy H"
+                },
+                {
+                    "family": "Kenney",
+                    "given": "Melissa A"
+                },
+                {
+                    "family": "Laney",
+                    "given": "Christine M"
+                },
+                {
+                    "family": "Larsen",
+                    "given": "Laurel G"
+                },
+                {
+                    "literal": "others"
+                }
+            ],
+            "container-title": "Proceedings of the National Academy of Sciences",
+            "id": "dietze2018iterative",
+            "issue": "7",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "page": "1424-1432",
+            "publisher": "National Acad Sciences",
+            "title": "Iterative near-term ecological forecasting: Needs, opportunities, and challenges",
+            "title-short": "Iterative near-term ecological forecasting",
+            "type": "article-journal",
+            "volume": "115"
+        },
+        {
             "DOI": "10.1086/504849",
             "ISSN": "0003-0147",
             "abstract": "The majority of higher organisms in the marine environment display indeterminate growth; that is, they continue to grow throughout their life, limited by an asymptotic size. We derive the abundance of species as a function of their asymptotic size. The derivation is based on size-spectrum theory, where population structure is derived from physiology and simple arguments regarding the predator-prey interaction. Using a hypothesis of constant satiation, which states that the average degree of satiation is independent of the size of an organism, the number of individuals with a given size is found to be proportional to the weight raised to the power -2.05, independent of the predator/prey size ratio. This is the first time the spectrum exponent has been derived solely on the basis of processes at the individual level. The theory furthermore predicts that the parameters in the von Bertalanffy growth function are related as K\\propto L -1 \\infty K\\proptoL\\infty-1 .",
@@ -1243,7 +1306,7 @@
                 }
             ],
             "container-title": "Freshwater Biology",
-            "id": "martínez2016",
+            "id": "martinez2016",
             "issue": "1",
             "issued": {
                 "date-parts": [
