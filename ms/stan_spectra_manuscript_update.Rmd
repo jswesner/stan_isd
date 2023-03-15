@@ -247,11 +247,13 @@ knitr::kable(mle_bayes_table,
 
 # Figures
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap = "Figure 1. Modeled estimates (median +/- 95% Credible Intervals) of \n\u03BB using either 10 separate models or a single model with ten varying intercepts.\\label{single_and_varint_plot:plot}"}
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap = "Figure 1. a) Modeled estimates (median +/- 95% Credible Intervals) of \n\u03BB using either 10 separate models or a single model with ten varying intercepts. c-d) Fit of ISD relationships at 3 values of \u03BB. Dots are raw data, lines are posterior medians, and shading is the 95% credible interval. Fits are from separate models. \\label{single_and_varint_plot:plot}"}
 
-single_and_varint_plot = readRDS(here("plots/single_and_varint_plot.rds"))
-single_and_varint_plot 
+# single_and_varint_plot = readRDS(here("plots/single_and_varint_plot.rds"))
+# single_and_varint_plot 
 
+fig_1_4panel = readRDS(file = "plots/fig_1_4panel.rds")
+fig_1_4panel
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap = "Figure 2. Posterior distributions of n = 40 modeled estimates of alpha, beta, and sigma_group for a linear regression estimating the size spectrum exponent as a function of a continuous predictor. All data were simulated. Gray densities indicate that the 95% CrI contains the true value, while black densities indicate the true values fall outside of the CrI. The vertical lines indicate true values.\\label{plot_linear_model_bias :plot}", fig.height = 3, fig.width = 6}

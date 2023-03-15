@@ -7,6 +7,7 @@ library(ggthemes)
 library(sizeSpectra)
 library(ggview)
 library(ggridges)
+library(patchwork)
 
 # load models
 recover_sims_counts = readRDS(file = "posteriors/recover_sims_counts.rds")  #(simulate single samples result)
@@ -20,16 +21,18 @@ sample_size_sims = readRDS("models/sample_size_sims.rds")                   #(te
 varint_sims = readRDS(file = "data/varint_sims.rds")
 count_sims_thin = readRDS(file = "data/count_sims_thin.rds") # for mle/bayes comparison with IBTS data
 
-# Table 1 ----------------------------------------------------------------
 
 single_mods = recover_sims_counts %>% 
-  rename(value = b_exp) %>% 
+  rename(value = lambda,
+         true_value = true_lambda) %>% 
   mutate(model = "Separate Models") %>% 
   mutate(parameter = "lambda")
 
 single_mod_summary = single_mods %>% 
   group_by(model, true_value, parameter) %>% 
   median_qi(value) 
+# Table 1 ----------------------------------------------------------------
+
 
 # varying intercepts
 true_varying_int = varint_sims %>% distinct(mean, sd) %>% 
@@ -103,6 +106,7 @@ var_int_groups = fit_varint %>%
   left_join(varint_sims %>% select(group, b) %>% rename(true_value = b))
 
 single_and_varint_plot = bind_rows(var_int_groups, single_mod_summary) %>% # single mode summary is from code for Table 1
+  mutate(facet = "a)") %>% 
   ggplot(aes(x = true_value, y = value, color = model, shape = model)) + 
   geom_pointrange(aes(ymin = .lower, ymax = .upper),
                   position = position_dodge(width = 0.04),
@@ -110,17 +114,34 @@ single_and_varint_plot = bind_rows(var_int_groups, single_mod_summary) %>% # sin
   geom_abline() +
   scale_color_grey(end = 0.6) + 
   theme_default() + 
-  labs(y = "Modeled Value",
-       x = "True Value",
+  facet_wrap(~facet) +
+  labs(y = "Modeled \u03bb",
+       x = "True \u03bb",
        color = "Models",
        shape = "Models") + 
-  ylim(-2.3, -1.1) + 
-  xlim(-2.3, -1.1)
+  ylim(-2.3, -1) + 
+  xlim(-2.3, -1) +
+  theme(legend.title = element_blank(),
+        strip.text = element_text(hjust = 0),
+        legend.position = c(0.25, 0.9),
+        legend.text = element_text(size = 8))
 
-ggview(single_and_varint_plot, width = 5, height = 3, units = "in")
-ggsave(single_and_varint_plot, width = 5, height = 3, units = "in",
+single_and_varint_plot
+
+ggview(single_and_varint_plot, width = 5, height = 5, units = "in")
+ggsave(single_and_varint_plot, width = 5, height = 5, units = "in",
        file = "plots/single_and_varint_plot.jpg")
 saveRDS(single_and_varint_plot, file = "plots/single_and_varint_plot.rds")
+
+
+isd_single_samples_plot_long = readRDS(file = "plots/isd_single_samples_plot_long.rds")
+
+fig_1_4panel = single_and_varint_plot + isd_single_samples_plot_long + 
+  plot_layout(widths = c(1.8, 1))
+
+ggview(fig_1_4panel, width = 6.5, height = 4, units = "in")
+ggsave(fig_1_4panel, file = "plots/fig_1_4panel.jpg", width = 6.5, height = 4, units = "in")
+saveRDS(fig_1_4panel, file = "plots/fig_1_4panel.rds")
 
 # Figure 2 ----------------------------------------------------------------
 true_reg_values = tibble(a = -1.5,

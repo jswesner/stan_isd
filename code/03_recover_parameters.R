@@ -9,60 +9,12 @@ rstan_options("auto_write" = TRUE)
 set.seed(1234987)
 
 
-# single sample -----------------------------------------------------------
-# precompile code
-fit_model = stan_model("models/b_paretocounts_singlesample.stan")
-
-n_sim = 1000
-xmax = 1000
-xmin = 1
-n_bs = 10
-b = seq(-2.2, -1.2, length.out = n_bs)
-
-x = sizeSpectra::rPLB(1000, -1.4, xmin = xmin, xmax = xmax)
-
-sim_data = tibble(xmax = xmax,
-       xmin = xmin,
-       counts = 1) %>% 
-  expand_grid(x = x)
-
-
-stan_dat <- list(x = sim_data$x,
-                 N = nrow(sim_data),
-                 counts = sim_data$counts,
-                 xmax = sim_data$xmax,
-                 xmin = sim_data$xmin)
-
-fit <- sampling(object = fit_model,
-                data = stan_dat,
-                iter = 100,
-                chains = 1,
-                open_progress = F,
-                verbose = F)
-
-
-
 # single samples ----------------------------------------------------------
 
 # precompile code
 fit_model = stan_model("models/b_paretocounts_singlesample.stan")
 
-# simulate
-n_sim = 1000
-xmax = 1000
-xmin = 1
-n_bs = 10
-b = seq(-2.2, -1.2, length.out = n_bs)
-b_true = b
-
-sim_b = tibble(xmax = xmax, xmin = xmin,
-               b = b) %>% 
-  mutate(group = as.integer(1:nrow(.)))
-
-# simulate single samples ----------------------------------------------------------
-
-# precompile code
-fit_model = stan_model("models/b_paretocounts_singlesample.stan")
+# simulate single samples 
 
 # simulate
 n_sim = 1000
@@ -73,26 +25,29 @@ b = seq(-2.2, -1.2, length.out = n_bs)
 b_true = b
 
 sim_b = tibble(xmax = xmax, xmin = xmin,
-               b = b) %>% 
-  mutate(group = as.integer(1:nrow(.)))
+               lambda = b) %>% 
+  mutate(group = as.integer(1:nrow(.)),
+         sample_size = n_sim)
 
 sim_data = sim_b %>% 
   expand_grid(individual = 1:n_sim) %>% 
   mutate(u = runif(nrow(.), min = 0, max = 1),
-         sims = (u*xmax^(b+1) +  (1-u) * xmin^(b+1) ) ^ (1/(b+1))) %>% 
-  group_by(b, xmin, xmax, group) %>% 
+         sims = (u*xmax^(lambda+1) +  (1-u) * xmin^(lambda+1) ) ^ (1/(lambda+1))) %>% 
+  group_by(lambda, xmin, xmax, group, sample_size) %>% 
   mutate(x = round(sims, 3)) %>% 
   count(x, name = "counts") %>% 
   # mutate(group = as.factor(b)) %>% 
   group_by(group) %>% 
   group_split()
 
+saveRDS(sim_data, file = "data/sim_data.rds")
+
 # preallocate
 posts_single = list()
 
 # fit
 for (i in 1:n_bs) {
-  b = unique(sim_data[[i]]$b)
+  true_lambda = unique(sim_data[[i]]$lambda)
   stan_dat <- list(x = sim_data[[i]]$x,
                    N = nrow(sim_data[[i]]),
                    counts = sim_data[[i]]$counts,
@@ -107,7 +62,7 @@ for (i in 1:n_bs) {
                   verbose = F)
   
   posts_single[[i]] = as_draws_df(fit) %>% 
-    mutate(true_value = b)
+    mutate(true_lambda = true_lambda)
       
 }
 
@@ -116,9 +71,9 @@ recover_sims = bind_rows(posts_single)
 saveRDS(recover_sims, file = "posteriors/recover_sims_counts.rds")
 
 parameter_recovery_withcounts = recover_sims %>% 
-  group_by(true_value) %>% 
-  median_qi(b_exp) %>% 
-  rename(b_modeled = b_exp)
+  group_by(true_lambda) %>% 
+  median_qi(lambda) %>% 
+  rename(b_modeled = lambda)
 
 write_csv(parameter_recovery_withcounts, file = "tables/parameter_recovery_withcounts.csv")
 
