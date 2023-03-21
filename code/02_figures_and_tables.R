@@ -141,6 +141,7 @@ fig_1_4panel = single_and_varint_plot + isd_single_samples_plot_long +
 
 ggview(fig_1_4panel, width = 6.5, height = 4, units = "in")
 ggsave(fig_1_4panel, file = "plots/fig_1_4panel.jpg", width = 6.5, height = 4, units = "in")
+ggsave(fig_1_4panel, file = "plots/fig_1_4panel.pdf", width = 6.5, height = 4, units = "in")
 saveRDS(fig_1_4panel, file = "plots/fig_1_4panel.rds")
 
 # Figure 2 ----------------------------------------------------------------
@@ -216,7 +217,7 @@ plot_linear_model_bias = var_reg_bias %>%
 
 # ggview(plot_linear_model_bias, width = 6.5, height = 3.5, units = "in")
 ggsave(plot_linear_model_bias, width = 6.5, height = 3.5, units = "in",
-       file = "plots/plot_linear_model_bias.jpg", dpi = 600)
+       file = "plots/fig_2_plot_linear_model_bias.jpg", dpi = 600)
 saveRDS(plot_linear_model_bias, file = "plots/plot_linear_model_bias.rds")
 
 
@@ -241,7 +242,7 @@ sample_size_plot = sample_size_sims %>%
 
 ggview(sample_size_plot, width = 6, height = 2, units = "in")
 ggsave(sample_size_plot, width = 6, height = 2, units = "in", 
-       file = "plots/sample_size_plot.jpg")
+       file = "plots/fig_3_sample_size_plot.jpg")
 saveRDS(sample_size_plot, file = "plots/sample_size_plot.rds")
 
 
@@ -291,6 +292,8 @@ ibts_conds_hierarchical = ibts_posts_hierarchical %>%
          sd_year = unique(count_sims_thin$sd_year),
          year = mat_s*sd_year + mean_year) %>% 
   mutate(lambda = a + beta_mat*mat_s)
+
+saveRDS(ibts_conds_hierarchical, file = "posteriors/ibts_conds_hierarchical.rds")
 
 ibts_year_posts_hierarchical = ibts_posts_hierarchical %>% 
   pivot_longer(cols = contains("alpha_raw_year")) %>% 
@@ -350,5 +353,5 @@ bayes_mle_regression_plot = bayes_mle_regression_lines %>%
 
 saveRDS(bayes_mle_regression_plot, file = "plots/bayes_mle_regression_plot.rds")
 ggview(bayes_mle_regression_plot, width = 6, height = 3, units = "in")
-ggsave(bayes_mle_regression_plot, width = 6, height = 3, units = "in", file = "plots/bayes_mle_regression_plot.jpg")
+ggsave(bayes_mle_regression_plot, width = 6, height = 3, units = "in", file = "plots/fig_4_bayes_mle_regression_plot.jpg")
 

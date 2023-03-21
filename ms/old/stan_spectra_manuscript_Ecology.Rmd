@@ -99,7 +99,7 @@ A compelling feature of size spectra is that $\lambda$ may vary little across ec
 
 Whether $\lambda$ represents a fixed or variable value is debated, but it often varies among samples and ecosystems [@blanchard2009; @pomeranz2020; @perkins2018]. It is often described by its "steepness", with more negative values (i.e., "steeper") indicating lower abundance of large relative to small individuals, and vice versa. These patterns of size frequency are an emergent property of demographic processes (e.g., age-dependent mortality), ecological interactions (e.g., size-structured predation, trophic transfer efficiency), and physiological constraints (e.g., size-dependent metabolic rates) [@muller2006comparing; @andersen2006; @white2008]. As a result, variation in $\lambda$ across ecosystems or across time can indicate fundamental shifts in community structure or ecosystem functioning. For example, overfishing in marine communities has been detected using size spectra in which $\lambda$ was steeper than expected, indicating fewer large fish than expected [@jennings_fish_2004]. Shifts in $\lambda$ have also been used to document responses to acid mine drainage in streams [@pomeranz2019; @pomeranz2020a], land use [@martinez2016], resource subsidies [@perkins2018], and temperature [@ogorman2017; @pomeranz2022].
 
-Given the ecological information it conveys, the data required to estimate size spectra are deceptively simple; only a single column of data are needed, in which each data point is a single measure of the body size of an individual. As long as the body sizes are collected systematically and without bias towards certain taxa or phenotypes, there is no need to know any more ecological information about the data points (e.g., taxon, trophic position, age, abundance). However, despite the simple data requirement, the statistical models used to estimate $\lambda$ are diverse. @edwards2017 documented 8 different analytical methods. Six involved binning, in which the body sizes are grouped into size bins (e.g., 2-49 mg, 50-150 mg, etc.) and then counted, generating values for abundance within each size bin. When both axes are log-transformed, binning allows $\lambda$ to be estimated using simple linear regression. Unfortunately, the binning process also removes most of the variation in the data, collapsing information about 1000's of individuals into just 6 or so bins. Doing so can lead to the wrong values of $\lambda$, sometimes drastically so [@white2008; @edwards2017; @edwards2020].
+Given the ecological information it conveys, the data required to estimate size spectra are deceptively simple; only a single column of data are needed, in which each data point is a single measure of the body size of an individual. As long as the body sizes are collected systematically and without bias towards certain taxa or phenotypes, there is no need to know any more ecological information about the data points (e.g., taxon, trophic position, age, abundance). However, despite the simple data requirement, the statistical models used to estimate $\lambda$ are diverse. @edwards2017 documented 8 different analytical methods. Six involved binning, in which the body sizes are grouped into size bins (e.g., 2-49 mg, 50-150 mg, etc.) and then counted, generating values for abundance within each size bin. When both axes are log-transformed, binning allows $\lambda$ to be estimated using simple linear regression. Unfortunately, the binning process also removes most of the variation in the data, collapsing information about 1000's of individuals into just 6 or so bins. Doing so can lead to the wrong values of $\lambda$, sometimes drastically so [@goldstein2004problems];@white2008; @edwards2020].
 
 An improved alternative to binning and linear regression is to fit the body size data to a power law probability distribution [@white2008; @edwards2017; @edwards2020]. This method uses all raw data observations directly to estimate $\lambda$, typically using the maximum likelihood estimation method [@edwards2017]. In addition to estimating size spectra of single samples, ecologists have used this method to examine how $\lambda$ varies across environmental gradients [@perkins2019; @pomeranz2022]. However, these analyses typically proceed in two steps. First, $\lambda$ estimates are obtained individually from each collection (e.g., each site or year, etc.). Second, these estimates are used as response variables in a linear model to examine how they relate to corresponding predictor variables [@edwards2020]. A downside to this approach is that it treats body sizes (and subsequent $\lambda$'s) as independent samples, even if they come from the same site or time. It also removes information on sample size (number of individuals) used to derive $\lambda$. As a result, the approach not only separates the data generation model from the predictor variables, but is also unable to take advantage of partial pooling during model fitting.
 
@@ -170,7 +170,7 @@ To examine model performance on empirical data, we re-ran a previously published
 
 ## Model Fitting
 
-We fit each of the above models in `rstan` [@rstan2022] using 2 chains each with 1000 iterations. All models converged with $R_{hat}$'s \<1.01. If a known parameter value fell inside the 95% Credible Intervals, we considered parameter recovery successful. For the replicated regression model, we also tallied the number of times that the known value fell outside of the 95% CrI.
+We fit each of the above models in `rstan` [@rstan2022] using 2 chains each with 1000 iterations. All models converged with $R_{hat}$'s \<1.01. If a known parameter value fell inside the 95% Credible Intervals, we considered parameter recovery successful. For the replicated regression model, we also tallied the number of times that the known value fell outside of the 95% CrI. Assessments of prior influence and model checking are available in the Supplementary Information.
 
 ## Data Availability Statement
 
@@ -245,37 +245,13 @@ knitr::kable(mle_bayes_table,
 
 \newpage
 
-# Figures
+# Figure Captions
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap = "Figure 1. a) Modeled estimates (median +/- 95% Credible Intervals) of \n\u03BB using either 10 separate models or a single model with ten varying intercepts. c-d) Fit of ISD relationships at 3 values of \u03BB. Dots are raw data, lines are posterior medians, and shading is the 95% credible interval. Fits are from separate models. \\label{single_and_varint_plot:plot}"}
+Figure 1. a) Modeled estimates (median +/- 95% Credible Intervals) of $\lambda$ using either 10 separate models or a single model with ten varying intercepts. c-d) Fit of ISD relationships at 3 values of $\lambda$. Dots are raw data, lines are posterior medians, and shading is the 95% credible interval. Fits are from separate models.
 
-# single_and_varint_plot = readRDS(here("plots/single_and_varint_plot.rds"))
-# single_and_varint_plot 
+Figure 2. Posterior distributions of n = 40 modeled estimates of alpha, beta, and sigma_group for a linear regression estimating the size spectrum exponent as a function of a continuous predictor. All data were simulated. Gray densities indicate that the 95% CrI contains the true value, while black densities indicate the true values fall outside of the CrI. The vertical lines indicate true values.
 
-fig_1_4panel = readRDS(file = "plots/fig_1_4panel.rds")
-fig_1_4panel
-```
+Figure 3. Estimates of $\lambda$B across 11 different sample sizes (ranging from 2 to 2048 individuals) and three different true $\lambda$'s (-2, -1.6, -1.2). Ten separate models were fit for each of the 11 sample sizes. The horizontal lines show the true value of $\lambda$.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap = "Figure 2. Posterior distributions of n = 40 modeled estimates of alpha, beta, and sigma_group for a linear regression estimating the size spectrum exponent as a function of a continuous predictor. All data were simulated. Gray densities indicate that the 95% CrI contains the true value, while black densities indicate the true values fall outside of the CrI. The vertical lines indicate true values.\\label{plot_linear_model_bias :plot}", fig.height = 3, fig.width = 6}
+Figure 4. Regression results from a) Edwards et al. (2020) using maximum likelihood and linear regression (two steps) and b) the Bayesian model with varying intercepts. In a) the points represent maximum likelihood estimates calculated separately for each year. In b) they represent hierarchical varying intercepts calculated from the model.
 
-plot_linear_model_bias = readRDS(file = here("plots/plot_linear_model_bias.rds"))
-
-plot_linear_model_bias
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap = "Figure 3. Estimates of \u03BB across 11 different sample sizes (ranging from 2 to 2048 individuals) and three different true \u03BB's (-2, -1.6, -1.2). Ten separate models were fit for each of the 11 sample sizes. The horizontal lines show the true value of \u03BB."}
-library(here)
-sample_size_plot = readRDS(file = here("plots/sample_size_plot.rds"))
-sample_size_plot + 
-  facet_wrap(~b_known) +
-  labs(y = "\u03BB")
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap = "Figure 4. Regression results from a) Edwards et al. (2020) using maximum likelihood and linear regression (two steps) and b) the Bayesian model with varying intercepts. In a) the points represent maximum likelihood estimates calculated separately for each year. In b) they represent hierarchical varying intercepts calculated from the model.", fig.width = 6, fig.height = 3}
-
-library(here)
-bayes_mle_regression_plot = readRDS(file = here("plots/bayes_mle_regression_plot.rds"))
-bayes_mle_regression_plot
-```
-
-# 

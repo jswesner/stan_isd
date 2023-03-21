@@ -77,12 +77,14 @@ lines_toplot = bind_rows(xy.PLB) %>%
   mutate(true_lambda = round(true_lambda, 1)) %>%
   mutate(true_lambda = case_when(true_lambda == min(true_lambda) ~ "a) \u03bb = -2",
                                  true_lambda == max(true_lambda) ~ "c) \u03bb = -1.3",
-                                 TRUE ~ "b) \u03bb = -1.3")) 
+                                 true_lambda <= -1.55 & true_lambda >= -1.65 ~ "b) \u03bb = -1.6")) %>% 
+  filter(!is.na(true_lambda))
 
 isd_single_samples_plot = dat_toplot   %>%
   mutate(true_lambda = case_when(true_lambda == min(true_lambda) ~ "a) \u03bb = -2",
                                  true_lambda == max(true_lambda) ~ "c) \u03bb = -1.3",
-                                 TRUE ~ "b) \u03bb = -1.3")) %>%
+                                 true_lambda <= -1.55 & true_lambda >= -1.65 ~ "b) \u03bb = -1.6")) %>% 
+  filter(!is.na(true_lambda)) %>%
   ggplot(aes(x = dw, y = y_order/1000, group = true_lambda)) + 
   geom_point(shape = 21, size = 0.3) +
   geom_line(data = lines_toplot ) +
@@ -110,11 +112,13 @@ ggsave(isd_single_samples_plot, file = "plots/isd_single_samples_plot.jpg",
 
 lambda_labels = dat_toplot %>%
   mutate(letters = case_when(true_lambda == min(true_lambda) ~ "d)",
-                                 true_lambda == max(true_lambda) ~ "b)",
-                                 TRUE ~ "c)")) %>%
+                            true_lambda == max(true_lambda) ~ "b)",
+                             true_lambda <= -1.55 & true_lambda >= -1.65 ~ "c)")) %>% 
+  filter(!is.na(letters)) %>%
   mutate(lambda_value = case_when(true_lambda == min(true_lambda) ~ "\u03bb = -2",
                                  true_lambda == max(true_lambda) ~ "\u03bb = -1.3",
-                                 TRUE ~ "\u03bb = -1.6")) %>% 
+                                 true_lambda <= -1.55 & true_lambda >= -1.65 ~ "\u03bb = -1.6")) %>% 
+  filter(!is.na(lambda_value)) %>% 
   mutate(dw = 2, y_order = 70) %>% 
   ungroup %>% 
   distinct(dw, y_order, letters, lambda_value)
@@ -122,18 +126,19 @@ lambda_labels = dat_toplot %>%
 isd_single_samples_plot_long = dat_toplot %>%
   mutate(letters = case_when(true_lambda == min(true_lambda) ~ "d)",
                                  true_lambda == max(true_lambda) ~ "b)",
-                                 TRUE ~ "c)")) %>%
+                             true_lambda <= -1.55 & true_lambda >= -1.65 ~ "c)")) %>% 
+  filter(!is.na(letters)) %>%
   ggplot(aes(x = dw, y = y_order/1000, group = true_lambda)) + 
   geom_point(shape = 21, size = 0.1) +
   geom_line(data = lines_toplot %>%
-              mutate(letters = case_when(true_lambda == min(true_lambda) ~ "d)",
-                                             true_lambda == max(true_lambda) ~ "b)",
-                                             TRUE ~ "c)")),
+              mutate(letters = case_when(grepl("a", true_lambda) ~ "d)",
+                                         grepl("b", true_lambda) ~ "c)",
+                                         TRUE ~ "b)")),
             linewidth = 0.2) +
   geom_ribbon(data = lines_toplot %>%
-                mutate(letters = case_when(true_lambda == min(true_lambda) ~ "d)",
-                                               true_lambda == max(true_lambda) ~ "b)",
-                                               TRUE ~ "c)"))  , 
+                mutate(letters = case_when(grepl("a", true_lambda) ~ "d)",
+                                           grepl("b", true_lambda) ~ "c)",
+                                           TRUE ~ "b)"))  , 
               aes(ymin = ymin/1000, ymax = ymax/1000), alpha = 0.2) +
   geom_text(data = lambda_labels, aes(label = lambda_value),
             size = 3) +

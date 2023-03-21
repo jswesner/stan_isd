@@ -85,87 +85,52 @@ ggsave(pp_check_plot, file = "plots/pp_check_plot.jpg", width = 6.5, height = 2,
        dpi = 500)
 
 
-
-
-
-
-
 # simulate summaries of original data -----------------------------------------------------------
-
-# sample dw weighted by density
 nsamples = 1000
 
 dat_sim_draw = sim_data %>% 
-  right_join(recover_sims %>% filter(.draw <= 300), multiple = "all") %>% 
+  right_join(recover_sims %>% filter(.draw <= 500), multiple = "all") %>% 
   group_by(true_lambda, sample_size, .draw) %>% 
   # filter(dw <= 1.01) %>% 
   sample_n(nsamples, weight = counts, replace = T) %>% 
   ungroup %>% 
   mutate(u = runif(nrow(.), min = 0, max = 1),
-         ypred = (u*xmax^(lambda+1) +  (1-u) * xmin^(lambda+1) ) ^ (1/(lambda+1)))
+         dw = (u*xmax^(lambda+1) +  (1-u) * xmin^(lambda+1) ) ^ (1/(lambda+1)))
 
+sim_plus_raw = dat_sim_draw %>% mutate(source = "ypred") %>% 
+  bind_rows(sim_data %>% mutate(source = "raw", .draw = 0)) %>% 
+  mutate(true_lambda = round(true_lambda, 1),
+         source = case_when(source == "raw" ~ "y",
+                            TRUE ~ "y_new")) %>%
+  mutate(true_lambda = case_when(true_lambda == min(true_lambda) ~ "d) \u03bb = -2",
+                                 true_lambda == max(true_lambda) ~ "f) \u03bb = -1.3",
+                                 TRUE ~ "e) \u03bb = -1.6"))
 
-ypred_median = sim_data %>% 
-  right_join(recover_sims %>% group_by(true_lambda) %>% median_qi(lambda)) %>% 
-  ungroup %>% 
-  mutate(u = runif(nrow(.), min = 0, max = 1),
-         ypred = (u*xmax^(lambda+1) +  (1-u) * xmin^(lambda+1) ) ^ (1/(lambda+1)),
-         lower = (u*xmax^(.lower+1) +  (1-u) * xmin^(.lower+1) ) ^ (1/(.lower+1)),
-         upper = (u*xmax^(.upper+1) +  (1-u) * xmin^(.upper+1) ) ^ (1/(.upper+1))) %>% 
-  select(true_lambda, ypred, lower, upper) %>% 
-  group_by(true_lambda) %>% 
-  arrange(true_lambda, ypred) %>% 
-  mutate(y_order = row_number())
-
-
-raw_ypred = sim_data %>% 
-  group_by(true_lambda) %>% 
-  arrange(true_lambda, dw) %>% 
-  mutate(y_order = row_number()) %>% 
-  left_join(ypred_median)
-
-
-raw_ypred %>% 
-  ggplot(aes(x = dw, y = ypred)) + 
-  geom_pointrange(aes(ymin = lower, ymax = upper),
-                  shape = 21, size = 0.01, linewidth = 0.001,
-                  alpha = 0.2) + 
-  facet_wrap(~true_lambda) + 
-  scale_x_log10() + 
-  scale_y_log10() + 
-  geom_abline()
-
-
-
-
-
-
-
-sim_medians = dat_sim_draw %>% 
+geom_means = sim_plus_raw %>% 
   group_by(true_lambda, .draw) %>% 
-  summarize(t_ynew = quantile(ypred, probs = 0.5))
+  summarize(geom_mean = exp(mean(log(dw))))
 
-raw_medians = sim_data %>% 
-  group_by(true_lambda) %>% 
-  summarize(t_yraw = quantile(dw, probs = 0.5))
-
-p_values = sim_medians %>% 
-  left_join(raw_medians) %>% 
-  mutate(diff = t_ynew - t_yraw,
-         higher = case_when(diff >= 0 ~ "higher", TRUE ~ "lower"),
-         ndraws = max(.draw)) %>% 
-  group_by(true_lambda, higher, ndraws) %>% 
-  tally() %>% 
-  filter(higher == "higher") %>% 
-  mutate(p_value = n/ndraws,
-         p_value = round(p_value, 2))
-
-sim_medians %>% 
-  ggplot(aes(x = t_ynew)) + 
-  geom_histogram(bins = 50) + 
+geom_mean_plot = geom_means %>% 
+  filter(.draw > 0) %>% 
+  ggplot(aes(x = geom_mean)) + 
+  geom_histogram(bins = 50, scale = 1) + 
   facet_wrap(~true_lambda) + 
   scale_x_log10() + 
-  geom_vline(data = raw_medians, aes(xintercept = t_yraw)) + 
-  geom_text(data = p_values, aes(x = 15, y = 60, label = p_value))
+  geom_vline(data = geom_means %>% filter(.draw == 1), 
+             aes(xintercept = geom_mean)) +
+  theme_default() + 
+  labs(x = "Geometric mean of body sizes",
+       y = "Count") +
+  theme(legend.title = element_blank(),
+        text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text = element_text(hjust = 0)) 
+
+
+  
+pp_check_geom_mean_plot = pp_check_plot/geom_mean_plot
+ggsave(pp_check_geom_mean_plot, file = "plots/pp_check_geom_mean_plot.jpg", width = 6.5, height = 4, units = "in",
+       dpi = 500)
+
 
 

@@ -64,6 +64,36 @@
             "volume": "115"
         },
         {
+            "author": [
+                {
+                    "family": "Goldstein",
+                    "given": "Michel L"
+                },
+                {
+                    "family": "Morris",
+                    "given": "Steven A"
+                },
+                {
+                    "family": "Yen",
+                    "given": "Gary G"
+                }
+            ],
+            "container-title": "The European Physical Journal B-Condensed Matter and Complex Systems",
+            "id": "goldstein2004problems",
+            "issued": {
+                "date-parts": [
+                    [
+                        2004
+                    ]
+                ]
+            },
+            "page": "255-258",
+            "publisher": "Springer",
+            "title": "Problems with fitting to the power-law distribution",
+            "type": "article-journal",
+            "volume": "41"
+        },
+        {
             "DOI": "10.1086/504849",
             "ISSN": "0003-0147",
             "abstract": "The majority of higher organisms in the marine environment display indeterminate growth; that is, they continue to grow throughout their life, limited by an asymptotic size. We derive the abundance of species as a function of their asymptotic size. The derivation is based on size-spectrum theory, where population structure is derived from physiology and simple arguments regarding the predator-prey interaction. Using a hypothesis of constant satiation, which states that the average degree of satiation is independent of the size of an organism, the number of individuals with a given size is found to be proportional to the weight raised to the power -2.05, independent of the predator/prey size ratio. This is the first time the spectrum exponent has been derived solely on the basis of processes at the individual level. The theory furthermore predicts that the parameters in the von Bertalanffy growth function are related as K\\propto L -1 \\infty K\\proptoL\\infty-1 .",
