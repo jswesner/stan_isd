@@ -1,13 +1,13 @@
 {
     "sortOrder": [
         {
-            "columnIndex": 2,
-            "ascending": true
-        },
-        {
             "columnIndex": 4,
             "ascending": false
+        },
+        {
+            "columnIndex": 2,
+            "ascending": true
         }
     ],
-    "path": "C:/Users/Jeff.Wesner/OneDrive - The University of South Dakota/USD/Github Projects/stan_isd/code"
+    "path": "C:/Users/Jeff.Wesner/OneDrive - The University of South Dakota/USD/Github Projects/stan_isd/ms"
 }
