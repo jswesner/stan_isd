@@ -66,6 +66,68 @@
         {
             "author": [
                 {
+                    "family": "Clauset",
+                    "given": "Aaron"
+                },
+                {
+                    "family": "Shalizi",
+                    "given": "Cosma Rohilla"
+                },
+                {
+                    "family": "Newman",
+                    "given": "Mark EJ"
+                }
+            ],
+            "container-title": "SIAM review",
+            "id": "clauset2009power",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "page": "661-703",
+            "publisher": "SIAM",
+            "title": "Power-law distributions in empirical data",
+            "type": "article-journal",
+            "volume": "51"
+        },
+        {
+            "author": [
+                {
+                    "family": "Aban",
+                    "given": "Inmaculada B"
+                },
+                {
+                    "family": "Meerschaert",
+                    "given": "Mark M"
+                },
+                {
+                    "family": "Panorska",
+                    "given": "Anna K"
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "aban2006parameter",
+            "issue": "473",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "270-277",
+            "publisher": "Taylor & Francis",
+            "title": "Parameter estimation for the truncated pareto distribution",
+            "type": "article-journal",
+            "volume": "101"
+        },
+        {
+            "author": [
+                {
                     "family": "Goldstein",
                     "given": "Michel L"
                 },
@@ -1452,6 +1514,37 @@
             "note": "Publisher: Wiley Online Library",
             "title": "Changes in stream food-web structure across a gradient of acid mine drainage increases local community stability",
             "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Clauset",
+                    "given": "Aaron"
+                },
+                {
+                    "family": "Shalizi",
+                    "given": "Cosma Rohilla"
+                },
+                {
+                    "family": "Newman",
+                    "given": "Mark EJ"
+                }
+            ],
+            "container-title": "SIAM review",
+            "id": "clauset2009",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "note": "Publisher: SIAM",
+            "page": "661703",
+            "title": "Power-law distributions in empirical data",
+            "type": "article-journal",
+            "volume": "51"
         }
     ],
     "project_biblios": []
