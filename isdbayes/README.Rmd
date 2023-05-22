@@ -19,11 +19,14 @@ truncated pareto described here:
 ```
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-library(brms) library(here) library(tidyverse) source(here("R/brm_distributions.R"))
+library(brms) 
+library(here) 
+library(tidyverse) 
+source(here("R/brm_distributions.R"))
 ```
 
 ```{r}
-{r} lambda = -1.2 # lambda value 
+lambda = -1.2 # lambda value 
 xmin = 1 # minimum size 
 xmax = 1000 # maximum size
 
