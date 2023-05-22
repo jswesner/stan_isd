@@ -53,7 +53,7 @@ lambda = -1.2 # lambda value
 xmin = 1 # minimum size 
 xmax = 1000 # maximum size
 
-sim_data = tibble(x = rparetocounts(n = 100, 
+sim_data = tibble(x = rparetocounts(n = 300, 
                                     mu = lambda, # use brms terminology
                                     vreal2 = xmin, 
                                     vreal3 = xmax)) %>% 
