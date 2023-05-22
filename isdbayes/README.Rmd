@@ -15,7 +15,7 @@ truncated pareto described here:
 <https://www.biorxiv.org/content/10.1101/2023.02.14.528491v1>.
 
 ```{r}
-knitr::opts_chunk$set(eval = FALSE)
+# knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
