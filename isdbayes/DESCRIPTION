@@ -1,0 +1,8 @@
+Package: isdbayes
+Type: Package
+Title: Fit Hierarchichal Bayesian Models to Estimate Size Spectra
+Version: 0.1.0
+Author: Jeff Wesner
+Maintainer: The package maintainer <jeff.wesner@usd.edu>
+Description: This package uses Bayesian hierarchical modeling to estimate the exponent of individual size distributions.
+LazyData: true
