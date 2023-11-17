@@ -20,7 +20,7 @@ parameters {
 }
 
 model {
-	lambda ~ normal(-1.8, 2);
+	lambda ~ normal(-1.6, 2);
 	for (i in 1:N){
 	  x[i] ~ paretocounts(lambda, xmin[i], xmax[i], counts[i]);
 	  }

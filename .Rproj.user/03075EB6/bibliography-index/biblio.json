@@ -66,6 +66,361 @@
         {
             "author": [
                 {
+                    "family": "Hoffman",
+                    "given": "Matthew D"
+                },
+                {
+                    "family": "Gelman",
+                    "given": "Andrew"
+                },
+                {
+                    "literal": "others"
+                }
+            ],
+            "container-title": "J. Mach. Learn. Res.",
+            "id": "hoffman2014no",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "page": "1593-1623",
+            "title": "The no-u-turn sampler: Adaptively setting path lengths in hamiltonian monte carlo.",
+            "title-short": "The no-u-turn sampler",
+            "type": "article-journal",
+            "volume": "15"
+        },
+        {
+            "author": [
+                {
+                    "family": "Platt",
+                    "given": "T"
+                },
+                {
+                    "family": "Denman",
+                    "given": "K"
+                }
+            ],
+            "container-title": "Helgoländer Wissenschaftliche Meeresuntersuchungen",
+            "id": "platt1977organisation",
+            "issued": {
+                "date-parts": [
+                    [
+                        1977
+                    ]
+                ]
+            },
+            "page": "575-581",
+            "publisher": "Springer",
+            "title": "Organisation in the pelagic ecosystem",
+            "type": "article-journal",
+            "volume": "30"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kerr",
+                    "given": "SR"
+                }
+            ],
+            "container-title": "Journal of the Fisheries Board of Canada",
+            "id": "kerr1974theory",
+            "issue": "12",
+            "issued": {
+                "date-parts": [
+                    [
+                        1974
+                    ]
+                ]
+            },
+            "page": "1859-1862",
+            "publisher": "NRC Research Press Ottawa, Canada",
+            "title": "Theory of size distribution in ecological communities",
+            "type": "article-journal",
+            "volume": "31"
+        },
+        {
+            "author": [
+                {
+                    "family": "Sheldon",
+                    "given": "RW"
+                },
+                {
+                    "family": "Parsons",
+                    "given": "TR"
+                }
+            ],
+            "container-title": "Journal of the Fisheries Board of Canada",
+            "id": "sheldon1967continuous",
+            "issue": "5",
+            "issued": {
+                "date-parts": [
+                    [
+                        1967
+                    ]
+                ]
+            },
+            "page": "909-915",
+            "publisher": "NRC Research Press Ottawa, Canada",
+            "title": "A continuous size spectrum for particulate matter in the sea",
+            "type": "article-journal",
+            "volume": "24"
+        },
+        {
+            "author": [
+                {
+                    "family": "Pomeranz",
+                    "given": "Justin PF"
+                },
+                {
+                    "family": "Junker",
+                    "given": "James R"
+                },
+                {
+                    "family": "Gjoni",
+                    "given": "Vojsava"
+                },
+                {
+                    "family": "Wesner",
+                    "given": "Jeff S"
+                }
+            ],
+            "container-title": "bioRxiv",
+            "id": "pomeranz2023detecting",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "page": "2023-03",
+            "publisher": "Cold Spring Harbor Laboratory",
+            "title": "Detecting differences in size spectra",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Gelman",
+                    "given": "Andrew"
+                }
+            ],
+            "id": "gelman2006prior",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "title": "Prior distributions for variance parameters in hierarchical models (comment on article by browne and draper)",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Wesner",
+                    "given": "Jeff"
+                },
+                {
+                    "family": "Pomeranz",
+                    "given": "Justin"
+                }
+            ],
+            "id": "wesner2023isdbayes",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "note": "R package version 0.1.0",
+            "title": "Isdbayes: Bayesian hierarchical modeling of power laws using brms",
+            "title-short": "Isdbayes",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Arranz",
+                    "given": "Ignasi"
+                },
+                {
+                    "family": "Hsieh",
+                    "given": "Chih-hao"
+                },
+                {
+                    "family": "Mehner",
+                    "given": "Thomas"
+                },
+                {
+                    "family": "Brucet",
+                    "given": "Sandra"
+                }
+            ],
+            "container-title": "Oikos",
+            "id": "arranz2019systematic",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "page": "33-44",
+            "publisher": "Wiley Online Library",
+            "title": "Systematic deviations from linear size spectra of lake fish communities are correlated with predator–prey interactions and lake-use intensity",
+            "type": "article-journal",
+            "volume": "128"
+        },
+        {
+            "DOI": "10.32614/RJ-2018-017",
+            "author": [
+                {
+                    "family": "Bürkner",
+                    "given": "Paul-Christian"
+                }
+            ],
+            "container-title": "The R Journal",
+            "id": "burkner2018",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "page": "395-411",
+            "title": "Advanced Bayesian multilevel modeling with the R package brms",
+            "type": "article-journal",
+            "volume": "10"
+        },
+        {
+            "author": [
+                {
+                    "family": "Aguilar",
+                    "given": "Javier Enrique"
+                },
+                {
+                    "family": "Bürkner",
+                    "given": "Paul-Christian"
+                }
+            ],
+            "container-title": "Electronic Journal of Statistics",
+            "id": "aguilar2023intuitive",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "page": "1711-1767",
+            "publisher": "The Institute of Mathematical Statistics; the Bernoulli Society",
+            "title": "Intuitive joint priors for bayesian linear multilevel models: The R2D2M2 prior",
+            "title-short": "Intuitive joint priors for bayesian linear multilevel models",
+            "type": "article-journal",
+            "volume": "17"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "rcoreteam2023",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "DOI": "10.18637/jss.v100.i05",
+            "author": [
+                {
+                    "family": "Bürkner",
+                    "given": "Paul-Christian"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "brms",
+            "issue": "5",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "page": "1-54",
+            "title": "Bayesian item response modeling in R with brms and Stan",
+            "type": "article-journal",
+            "volume": "100"
+        },
+        {
+            "URL": "https://mc-stan.org/",
+            "author": [
+                {
+                    "literal": "Stan Development Team"
+                }
+            ],
+            "id": "rstan",
+            "note": "R package version 2.26.22",
+            "title": "RStan: The R interface to Stan",
+            "title-short": "RStan",
+            "type": ""
+        },
+        {
+            "author": [
+                {
+                    "family": "Annis",
+                    "given": "Jeffrey"
+                },
+                {
+                    "family": "Miller",
+                    "given": "Brent J"
+                },
+                {
+                    "family": "Palmeri",
+                    "given": "Thomas J"
+                }
+            ],
+            "container-title": "Behavior research methods",
+            "id": "annis2017bayesian",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "page": "863-886",
+            "publisher": "Springer",
+            "title": "Bayesian inference with stan: A tutorial on adding custom distributions",
+            "title-short": "Bayesian inference with stan",
+            "type": "article-journal",
+            "volume": "49"
+        },
+        {
+            "author": [
+                {
                     "family": "Clauset",
                     "given": "Aaron"
                 },
@@ -93,6 +448,45 @@
             "title": "Power-law distributions in empirical data",
             "type": "article-journal",
             "volume": "51"
+        },
+        {
+            "author": [
+                {
+                    "family": "Conn",
+                    "given": "Paul B"
+                },
+                {
+                    "family": "Johnson",
+                    "given": "Devin S"
+                },
+                {
+                    "family": "Williams",
+                    "given": "Perry J"
+                },
+                {
+                    "family": "Melin",
+                    "given": "Sharon R"
+                },
+                {
+                    "family": "Hooten",
+                    "given": "Mevin B"
+                }
+            ],
+            "container-title": "Ecological Monographs",
+            "id": "conn2018guide",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "page": "526-542",
+            "publisher": "Wiley Online Library",
+            "title": "A guide to bayesian model checking for ecologists",
+            "type": "article-journal",
+            "volume": "88"
         },
         {
             "author": [
@@ -1274,6 +1668,34 @@
             "volume": "40"
         },
         {
+            "author": [
+                {
+                    "family": "Sprules",
+                    "given": "William Gary"
+                },
+                {
+                    "family": "Barth",
+                    "given": "Lauren Emily"
+                }
+            ],
+            "container-title": "Canadian Journal of Fisheries and Aquatic Sciences",
+            "id": "sprules2016surfing",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "page": "477-495",
+            "publisher": "NRC Research Press",
+            "title": "Surfing the biomass size spectrum: Some remarks on history, theory, and application",
+            "title-short": "Surfing the biomass size spectrum",
+            "type": "article-journal",
+            "volume": "73"
+        },
+        {
             "DOI": "10.1002/ecs2.3739",
             "ISSN": "2150-8925, 2150-8925",
             "abstract": "Bayesian data analysis is increasingly used in ecology, but prior specification remains focused on choosing non-informative priors (e.g., flat or vague priors). One barrier to choosing more informative priors is that priors must be specified on model parameters (e.g., intercepts, slopes, and sigmas), but prior knowledge often exists on the level of the response variable. This is particularly true for common models in ecology, like generalized linear mixed models that have a link function and potentially dozens of parameters, each of which needs a prior distribution. We suggest that this difficulty can be overcome by simulating from the prior predictive distribution and visualizing the results on the scale of the response variable. In doing so, some common choices for non-informative priors on parameters can easily be seen to produce biologically impossible values of response variables. Such implications of prior choices are difficult to foresee without visualization. We demonstrate a workflow for prior selection using simulation and visualization with two ecological examples (predatorprey body sizes and spider responses to food competition). This approach is not new, but its adoption by ecologists will help to better incorporate prior information in ecological models, thereby maximizing one of the benefits of Bayesian data analysis.",
@@ -1545,6 +1967,508 @@
             "title": "Power-law distributions in empirical data",
             "type": "article-journal",
             "volume": "51"
+        },
+        {
+            "author": [
+                {
+                    "family": "Gelman",
+                    "given": "Andrew"
+                },
+                {
+                    "family": "Vehtari",
+                    "given": "Aki"
+                },
+                {
+                    "family": "Simpson",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Margossian",
+                    "given": "Charles C"
+                },
+                {
+                    "family": "Carpenter",
+                    "given": "Bob"
+                },
+                {
+                    "family": "Yao",
+                    "given": "Yuling"
+                },
+                {
+                    "family": "Kennedy",
+                    "given": "Lauren"
+                },
+                {
+                    "family": "Gabry",
+                    "given": "Jonah"
+                },
+                {
+                    "family": "Bürkner",
+                    "given": "Paul-Christian"
+                },
+                {
+                    "family": "Modrák",
+                    "given": "Martin"
+                }
+            ],
+            "container-title": "arXiv preprint arXiv:2011.01808",
+            "id": "gelman2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "title": "Bayesian workflow",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Gabry",
+                    "given": "J."
+                },
+                {
+                    "family": "Simpson",
+                    "given": "D."
+                },
+                {
+                    "family": "Vehtari",
+                    "given": "A."
+                },
+                {
+                    "family": "Betancourt",
+                    "given": "M."
+                },
+                {
+                    "family": "Gelman",
+                    "given": "A."
+                }
+            ],
+            "container-title": "J. R. Stat. Soc. A. Stat",
+            "id": "gabry2019",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "389402",
+            "title": "Visualization in Bayesian workflow",
+            "type": "article-journal",
+            "volume": "182"
+        },
+        {
+            "author": [
+                {
+                    "family": "Gelman",
+                    "given": "Andrew"
+                },
+                {
+                    "family": "Carlin",
+                    "given": "John B"
+                },
+                {
+                    "family": "Stern",
+                    "given": "Hal S"
+                },
+                {
+                    "family": "Dunson",
+                    "given": "David B"
+                },
+                {
+                    "family": "Vehtari",
+                    "given": "Aki"
+                },
+                {
+                    "family": "Rubin",
+                    "given": "Donald B"
+                }
+            ],
+            "id": "gelman2013",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "publisher": "CRC press",
+            "title": "Bayesian data analysis",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bürkner",
+                    "given": "Paul-Christian"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "bürkner2017",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "1-28",
+            "title": "brms: An R package for Bayesian multilevel models using Stan",
+            "title-short": "brms",
+            "type": "article-journal",
+            "volume": "80"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "family": "R Core Team"
+                }
+            ],
+            "id": "rcoreteam2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "family": "R Core Team"
+                }
+            ],
+            "id": "rcoreteam2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Banner",
+                    "given": "Katharine M"
+                },
+                {
+                    "family": "Irvine",
+                    "given": "Kathryn M"
+                },
+                {
+                    "family": "Rodhouse",
+                    "given": "Thomas J"
+                }
+            ],
+            "container-title": "Methods in Ecology and Evolution",
+            "id": "banner2020",
+            "issue": "8",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "note": "Publisher: Wiley Online Library",
+            "page": "882889",
+            "title": "The use of bayesian priors in ecology: The good, the bad and the not great",
+            "title-short": "The use of bayesian priors in ecology",
+            "type": "article-journal",
+            "volume": "11"
+        },
+        {
+            "author": [
+                {
+                    "family": "Gelman",
+                    "given": "Andrew"
+                }
+            ],
+            "container-title": "Bayesian Analysis",
+            "id": "gelman2006",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "note": "Publisher: International Society for Bayesian Analysis",
+            "page": "515534",
+            "title": "Prior distributions for variance parameters in hierarchical models (comment on article by browne and draper)",
+            "type": "article-journal",
+            "volume": "1"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bürkner",
+                    "given": "Paul-Christian"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "bürkner2017",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "1-28",
+            "title": "brms: An R package for Bayesian multilevel models using Stan",
+            "title-short": "brms",
+            "type": "article-journal",
+            "volume": "80"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "family": "R Core Team"
+                }
+            ],
+            "id": "rcoreteam2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bürkner",
+                    "given": "Paul-Christian"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "bürkner2017",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "1-28",
+            "title": "brms: An R package for Bayesian multilevel models using Stan",
+            "title-short": "brms",
+            "type": "article-journal",
+            "volume": "80"
+        },
+        {
+            "author": [
+                {
+                    "family": "McElreath",
+                    "given": "R."
+                }
+            ],
+            "id": "mcelreath2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "language": "en",
+            "publisher": "Chapman; Hall/CRC",
+            "title": "Statistical rethinking: A Bayesian course with examples in R and Stan",
+            "title-short": "Statistical rethinking",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "White",
+                    "given": "Ethan P"
+                },
+                {
+                    "family": "Ernest",
+                    "given": "SK Morgan"
+                },
+                {
+                    "family": "Kerkhoff",
+                    "given": "Andrew J"
+                },
+                {
+                    "family": "Enquist",
+                    "given": "Brian J"
+                }
+            ],
+            "container-title": "Trends in Ecology & Evolution",
+            "id": "white2007",
+            "issue": "6",
+            "issued": {
+                "date-parts": [
+                    [
+                        2007
+                    ]
+                ]
+            },
+            "note": "Publisher: Elsevier",
+            "page": "323330",
+            "title": "Relationships between body size and abundance in ecology",
+            "type": "article-journal",
+            "volume": "22"
+        },
+        {
+            "URL": "http://dx.doi.org/10.1111/2041-210X.12641",
+            "author": [
+                {
+                    "family": "Edwards",
+                    "given": "A. M."
+                },
+                {
+                    "family": "Robinson",
+                    "given": "J. P. W."
+                },
+                {
+                    "family": "Plank",
+                    "given": "M. J."
+                },
+                {
+                    "family": "Baum",
+                    "given": "J. K."
+                },
+                {
+                    "family": "Blanchard",
+                    "given": "J. L."
+                }
+            ],
+            "container-title": "Methods in Ecology and Evolution",
+            "id": "edwards2017",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "language": "en",
+            "note": "Number: 1 Place: United Kingdom Publisher: Wiley-Blackwell Publishing Ltd.",
+            "page": "57-67",
+            "title": "Testing and recommending methods for fitting size spectra to data",
+            "type": "article-journal",
+            "volume": "8"
+        },
+        {
+            "URL": "http://dx.doi.org/10.1111/2041-210X.12641",
+            "author": [
+                {
+                    "family": "Edwards",
+                    "given": "A. M."
+                },
+                {
+                    "family": "Robinson",
+                    "given": "J. P. W."
+                },
+                {
+                    "family": "Plank",
+                    "given": "M. J."
+                },
+                {
+                    "family": "Baum",
+                    "given": "J. K."
+                },
+                {
+                    "family": "Blanchard",
+                    "given": "J. L."
+                }
+            ],
+            "container-title": "Methods in Ecology and Evolution",
+            "id": "edwards2017",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "language": "en",
+            "note": "Number: 1 Place: United Kingdom Publisher: Wiley-Blackwell Publishing Ltd.",
+            "page": "57-67",
+            "title": "Testing and recommending methods for fitting size spectra to data",
+            "type": "article-journal",
+            "volume": "8"
+        },
+        {
+            "DOI": "10.3354/meps13230",
+            "URL": "https://www.int-res.com/abstracts/meps/v636/p19-33/",
+            "author": [
+                {
+                    "family": "Edwards",
+                    "given": "Am"
+                },
+                {
+                    "family": "Robinson",
+                    "given": "Jpw"
+                },
+                {
+                    "family": "Blanchard",
+                    "given": "Jl"
+                },
+                {
+                    "family": "Baum",
+                    "given": "Jk"
+                },
+                {
+                    "family": "Plank",
+                    "given": "Mj"
+                }
+            ],
+            "container-title": "Marine Ecology Progress Series",
+            "id": "edwards2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020,
+                        2,
+                        20
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "19-33",
+            "title": "Accounting for the bin structure of data removes bias when fitting size spectra",
+            "type": "article-journal",
+            "volume": "636"
         }
     ],
     "project_biblios": []
