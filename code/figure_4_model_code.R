@@ -11,12 +11,8 @@ rstan_options("auto_write" = TRUE)
 
 theme_set(theme_default())
 
-###
-# LOAD PLOT #
-hierarchical_regression_plot = readRDS(file = "plots/hierarchical_regression_plot.rds")
-###
 
-
+# simulate data
 set.seed = 123123
 intercept = -1.5
 # var_int_sd = 0.1
@@ -105,12 +101,12 @@ brm_twostep_regress_rand = update(brm_twostep_regress,
 #                           file = "models/brm_twostep_regress_rand.rds",
 #                           file_refit = "on_change")
 # 
-# brm_twostep_regress_mi = brm(Estimate|mi(Est.Error) ~ predictor,
-#                              data = single_lambdas,
-#                              iter = 1000, 
-#                              chains = 4,
-#                              file = "models/brm_twostep_regress_mi.rds",
-#                              file_refit = "on_change")
+brm_twostep_regress_mi = brm(Estimate|mi(Est.Error) ~ predictor,
+                             data = single_lambdas,
+                             iter = 2000,
+                             chains = 4,
+                             file = "models/brm_twostep_regress_mi.rds",
+                             file_refit = "on_change")
 # 
 # brm_regress = brm(x | vreal(counts, xmin, xmax) ~ predictor, 
 #                                        data = sim_data,
@@ -186,20 +182,129 @@ weak_rand_samples = mod_list[[5]]$data %>%
   mutate(counts = 1, xmin = 1, xmax = 1000) %>% 
   add_epred_draws(mod_list[[5]], re_formula = NULL) %>% 
   mutate(model = 5,
-         model_name = "b) Bayesian - One Step\nHierarchical + Weak Priors")
+         model_name = "c) Bayesian - One Step\nHierarchical + Weak Priors")
 
 strong_rand_samples = mod_list[[6]]$data %>% 
   distinct(predictor, group) %>% 
   mutate(counts = 1, xmin = 1, xmax = 1000) %>% 
   add_epred_draws(mod_list[[6]], re_formula = NULL) %>% 
   mutate(model = 6,
-         model_name = "c) Bayesian - One Step\nHierarchical + Strong Priors")
+         model_name = "d) Bayesian - One Step\nHierarchical + Strong Priors")
 
 rand_samples = bind_rows(weak_rand_samples, strong_rand_samples)
 
 samples_all = rand_samples %>% 
   group_by(model, model_name, predictor) %>% 
   median_qi(.epred) 
+
+
+
+# plot posteriors ---------------------------------------------------------
+
+all_posts = bind_rows(mod_draws) %>% 
+  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
+                                model == 2 ~ "b) MLE - Two Steps\nWeighted Regression",
+                                # model == 3 ~ "c) One Step\nWeak Priors",
+                                # model == 4 ~ "d) One Step\nStrong Priors",
+                                model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
+                                model == 6 ~ "d) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
+  filter(model %in% c(1,2,5,6)) %>% 
+  mutate()
+
+all_samples = samples_all %>% 
+  mutate(dots = "Hierarchical Estimated \u03BB's") %>% 
+  bind_rows(single_lambdas %>% 
+              expand_grid(model = 1:2) %>%
+              # mutate(model = 1) %>% 
+              rename(.epred = Estimate) %>% 
+              mutate(dots = "Individually Estimated \u03BB's") %>% 
+              left_join(all_posts %>% ungroup %>% distinct(model, model_name))) %>% 
+  filter(!is.na(model_name)) %>% 
+  mutate(dot_size = case_when(predictor == 2.5 ~ 20,
+                              TRUE ~ 400),
+         outlier = case_when(predictor == 2.5 ~ "Outlier", 
+                             TRUE ~ "Not outlier"))  %>% 
+  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
+                                model == 2 ~ "b) MLE - Two Steps\nWeighted Regression",
+                                # model == 3 ~ "c) One Step\nWeak Priors",
+                                # model == 4 ~ "d) One Step\nStrong Priors",
+                                model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
+                                model == 6 ~ "d) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
+  filter(model %in% c(1,2,5,6)) %>% 
+  mutate(.lower = case_when(model == 2 ~ Q2.5,
+                            TRUE ~ .lower),
+         .upper = case_when(model == 2 ~ Q97.5, 
+                            TRUE ~ .upper))
+
+
+
+pars = lapply(mod_list, fixef)
+pars_id = NULL
+for(i in 1:length(pars)) {
+  pars_id[[i]] = pars[[i]] %>% as_tibble() %>% mutate(model = i,
+                                                      par = c("Intercept", "Slope"))
+  pars_id_out = bind_rows(pars_id)
+}
+
+pars_fixefs = pars_id_out %>% left_join(tibble(par = c("Intercept", "Slope"),
+                                               true_value = c(mean(single_lambdas$Estimate), beta))) %>% 
+  left_join(all_posts %>% ungroup %>% distinct(model, model_name)) %>% 
+  filter(!is.na(model_name)) %>% 
+  mutate(order = as.numeric(as.factor(str_sub(model_name, 1, 1))))
+
+slope_text = pars_fixefs  %>% 
+  mutate(across(where(is.numeric), round, 2)) %>% 
+  mutate(text = paste0(par, ": ", Estimate, " (", Q2.5, " to ", Q97.5, ")")) %>% 
+  filter(par == "Slope")
+
+hierarchical_regression_plot = all_posts %>% 
+  ggplot(aes(x = predictor, y = .epred)) + 
+  stat_lineribbon(.width = c(0.5, 0.95), color = "black",
+                  fill = "grey20", alpha = 0.4, 
+                  linewidth = 0.2) + 
+  facet_wrap(~model_name, nrow = 2) +
+  geom_pointrange(data = all_samples, aes(y = .epred, x = predictor,
+                                          ymin = .lower,
+                                          ymax = .upper,
+                                          shape = outlier,
+                                          alpha = dots),
+                  size = 0.2,
+                  linewidth = 0.2) +
+  facet_wrap(~model_name) +
+  scale_alpha_manual(values = c(0.4, .8)) +
+  theme(strip.text.x = element_text(angle = 0, hjust = 0),
+        legend.title = element_blank(),
+        legend.position = c(0.15, 0.9),
+        legend.text = element_text(size = 9),
+        text = element_text(size = 9)) + 
+  labs(y = "\u03BB",
+       x = "Predictor") +
+  # geom_abline(intercept = mean(lambda_sims$b), slope = -0.1) +
+  coord_cartesian(ylim = c(-1.8, -1)) +
+  guides(shape = "none",
+         alpha = "none") + 
+  geom_text(data = slope_text, aes(label = text),
+            x = -0.5, y = -1.7, size = 2)
+
+
+ggview::ggview(hierarchical_regression_plot, 
+               width = 6.5, height = 4.5, units = "in")
+
+saveRDS(hierarchical_regression_plot, file = "plots/fig4hierarchical_regression_plot.rds")
+ggsave(hierarchical_regression_plot, file = "plots/fig4hierarchical_regression_plot.jpg",
+       width = 6.5, height = 4.5, units = "in", dpi = 500)
+
+
+
+# posterior processing ----------------------------------------------------
+
+as_draws_df(a) %>% 
+  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
+as_draws_df(e) %>% 
+  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
+as_draws_df(f) %>% 
+  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
+
 
 # compare slopes ----------------------------------------------------------
 
@@ -227,83 +332,3 @@ pars_fixefs %>%
   labs(y = "",
        x = "Parameter Estimate") +
   theme(strip.text.x = element_text(hjust = 0))
-
-# plot posteriors ---------------------------------------------------------
-
-all_posts = bind_rows(mod_draws) %>% 
-  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
-                                # model == 2 ~ "b) Two Steps\nErrors in Variables Regression",
-                                # model == 3 ~ "c) One Step\nWeak Priors",
-                                # model == 4 ~ "d) One Step\nStrong Priors",
-                                model == 5 ~ "b) Bayesian - One Step\nHierarchical + Weak Priors",
-                                model == 6 ~ "c) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
-  filter(model %in% c(1,5,6)) 
-
-all_samples = samples_all %>% 
-  mutate(dots = "Hierarchical Estimated \u03BB's") %>% 
-  bind_rows(single_lambdas %>% 
-              # expand_grid(model = 1:6) %>% 
-              mutate(model = 1) %>% 
-              rename(.epred = Estimate) %>% 
-              mutate(dots = "Individually Estimated \u03BB's") %>% 
-              left_join(all_posts %>% ungroup %>% distinct(model, model_name))) %>% 
-  filter(!is.na(model_name)) %>% 
-  mutate(dot_size = case_when(predictor == 2.5 ~ 20,
-                              TRUE ~ 400),
-         outlier = case_when(predictor == 2.5 ~ "Outlier", 
-                             TRUE ~ "Not outlier")) 
-
-
-slope_text = pars_fixefs  %>% 
-  mutate(across(where(is.numeric), round, 2)) %>% 
-  mutate(text = paste0(par, ": ", Estimate, " (", Q2.5, " to ", Q97.5, ")")) %>% 
-  filter(par == "Slope")
-
-
-hierarchical_regression_plot = all_posts %>% 
-  ggplot(aes(x = predictor, y = .epred)) + 
-  stat_lineribbon(.width = c(0.5, 0.95), color = "black",
-                  fill = "grey20", alpha = 0.4, 
-                  linewidth = 0.2) + 
-  facet_wrap(~model_name, nrow = 1) +
-  geom_pointrange(data = all_samples, aes(y = .epred, x = predictor,
-                                          ymin = .lower,
-                                          ymax = .upper,
-                                          shape = outlier,
-                                          alpha = dots),
-                  size = 0.2,
-                  linewidth = 0.2) +
-  facet_wrap(~model_name) +
-  scale_alpha_manual(values = c(0.4, .8)) +
-  theme(strip.text.x = element_text(angle = 0, hjust = 0),
-        legend.title = element_blank(),
-        legend.position = c(0.15, 0.9),
-        legend.text = element_text(size = 9),
-        text = element_text(size = 9)) + 
-  labs(y = "\u03BB",
-       x = "Predictor") +
-  geom_abline(intercept = mean(lambda_sims$b), slope = -0.1) +
-  coord_cartesian(ylim = c(-1.8, -1)) +
-  guides(shape = "none",
-         alpha = "none") + 
-  geom_text(data = slope_text, aes(label = text),
-            x = -0.5, y = -1.7, size = 2)
-
-
-ggview::ggview(hierarchical_regression_plot, 
-               width = 6.5, height = 2.5, units = "in")
-
-saveRDS(hierarchical_regression_plot, file = "plots/hierarchical_regression_plot.rds")
-ggsave(hierarchical_regression_plot, file = "plots/hierarchical_regression_plot.jpg",
-       width = 6.5, height = 3, units = "in", dpi = 500)
-
-
-
-# posterior processing ----------------------------------------------------
-
-as_draws_df(a) %>% 
-  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
-as_draws_df(e) %>% 
-  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
-as_draws_df(f) %>% 
-  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
