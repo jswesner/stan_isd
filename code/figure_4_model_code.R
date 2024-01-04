@@ -65,7 +65,8 @@ brm_single_fixefs = NULL
 
 for(i in 1:length(brm_single_mods)){
   brm_single_fixefs[[i]] = as_tibble(fixef(brm_single_mods[[i]])) %>% 
-    mutate(group = i)
+    mutate(group = i, 
+           reps = nrow(brm_single_mods[[i]]$data))
 }
 
 single_lambdas = bind_rows(brm_single_fixefs) %>% 
@@ -332,3 +333,8 @@ pars_fixefs %>%
   labs(y = "",
        x = "Parameter Estimate") +
   theme(strip.text.x = element_text(hjust = 0))
+
+
+# weighted regression  ----------------------------------------------------
+
+

@@ -4,3 +4,7 @@
 .Ruserdata
 
 /ms
+/models/coverage_models/sim_vary_lambdas1000.rds
+/models/coverage_models/fixed_mods1000.rds
+/models/coverage_models/varint_mods400.rds
+/models/coverage_models/varing_mods600.rds

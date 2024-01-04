@@ -29,36 +29,77 @@ xmax_coverage = xmax_lambdas %>%
                        TRUE ~ orders_mag - 0.28))
 
 #2) make plot
-range_of_sizes = xmax_lambdas %>% 
-  # filter(replicate <= 1000) %>% 
-  ggplot(aes(x = orders_mag, y = mean, group = interaction(orders_mag, true_value))) + 
-  geom_point(shape = 21, size = 0.01,
-             aes(group = true_value, color = cov95), position = position_jitterdodge(dodge.width = 0.2, jitter.width = 0.03)) +
-  # facet_wrap(. ~ true_value, ncol = 1) +
-  labs(y = "\u03bb",
-       x = "Range of body sizes\n(orders of magnitude)",
-       color = "95% CrI contains true value?",
-       subtitle = "b) Size Range") +
+
+xmax_labels = 
+  xmax_lambdas %>%
+  filter(xmin == 1) %>% 
+  distinct(xmin, xmax, true_value, orders_mag) %>% 
+  mutate(xmin_label = paste0("xmin = ", xmin),
+         xmax_label = paste0("xmax = ", xmax),
+         true_value_label = case_when(true_value == -2 ~ "a) \u03bb = -2",
+                                      TRUE ~ "b) \u03bb = -1.6"))
+
+range_of_sizes = xmax_lambdas %>%
+  filter(xmin == 1) %>% 
+  arrange(orders_mag, true_value, `2.5%`) %>% 
+  mutate(replicate = rep(1:1000, 10),
+         true_value_label = case_when(true_value == -2 ~ "a) \u03bb = -2",
+                                      TRUE ~ "b) \u03bb = -1.6")) %>% 
+  ggplot(aes(y = replicate)) + 
+  geom_linerange(linewidth = 0.3,
+                 aes(x = mean, xmin = `2.5%`, xmax = `97.5%`,
+                     color = as.factor(cov95))) +
   scale_color_colorblind() +
+  lemon::facet_rep_grid(orders_mag ~ true_value_label,
+                        scales = "free") +
+  geom_vline(aes(xintercept = true_value)) +
+  labs(x = "\u03bb",
+       y = "Simulation",
+       color = "CrI contains true value?") +
+  ggthemes::scale_color_colorblind() +
+  geom_text(data = xmax_labels, aes(label = xmax_label, x = true_value - 0.45, y = 620, hjust = 0),
+            size = 2.4) +
+  geom_text(data = xmax_labels, aes(label = xmin_label, x = true_value - 0.45, y = 700, hjust = 0),
+            size = 2.4) +
   theme_default() +
-  geom_hline(data = . %>% ungroup %>% distinct(xmin, true_value), aes(yintercept = true_value)) +
-  theme(strip.text.y = element_blank(),
-        legend.position = "top") + 
-  guides(color = guide_legend(override.aes = list(size=3))) +
-  geom_text(data = xmax_coverage, aes(y = true_value + 0.03, label = cov, x = x),
-            size = 2) + 
-  stat_summary(
-    geom = "point",
-    fun = "mean",
-    col = "black",
-    size = 2,
-    shape = 21,
-    position = position_dodge(width = 0.2)
-  )
+  theme(legend.position = "top",
+        strip.text.x = element_text(hjust = 0,
+                                    vjust = 3),
+        strip.text.y = element_blank()) +
+  scale_y_continuous(breaks = c(1, 500, 1000)) +
+  # xlim(-3, -1) +
+  NULL
+
+# range_of_sizes = xmax_lambdas %>% 
+#   # filter(replicate <= 1000) %>% 
+#   ggplot(aes(x = orders_mag, y = mean, group = interaction(orders_mag, true_value))) + 
+#   geom_point(shape = 21, size = 0.01,
+#              aes(group = true_value, color = cov95), position = position_jitterdodge(dodge.width = 0.2, jitter.width = 0.03)) +
+#   # facet_wrap(. ~ true_value, ncol = 1) +
+#   labs(y = "\u03bb",
+#        x = "Range of body sizes\n(orders of magnitude)",
+#        color = "95% CrI contains true value?",
+#        subtitle = "b) Size Range") +
+#   scale_color_colorblind() +
+#   theme_default() +
+#   geom_hline(data = . %>% ungroup %>% distinct(xmin, true_value), aes(yintercept = true_value)) +
+#   theme(strip.text.y = element_blank(),
+#         legend.position = "top") + 
+#   guides(color = guide_legend(override.aes = list(size=3))) +
+#   geom_text(data = xmax_coverage, aes(y = true_value + 0.03, label = cov, x = x),
+#             size = 2) + 
+#   stat_summary(
+#     geom = "point",
+#     fun = "mean",
+#     col = "black",
+#     size = 2,
+#     shape = 21,
+#     position = position_dodge(width = 0.2)
+#   )
 
 #3) save plot
-ggview::ggview(range_of_sizes, width = 5, height = 6)
-save_plot_and_data(range_of_sizes, file_name = "plots/fig2b_range_of_sizes", width = 5, height = 6, dpi = 500)
+ggview::ggview(range_of_sizes, width = 5, height = 9)
+save_plot_and_data(range_of_sizes, file_name = "plots/fig2b_range_of_sizes", width = 5, height = 9, dpi = 500)
 
 #4) calculate bias
 xmax_lambdas %>% 
@@ -85,7 +126,13 @@ sample_size_summary = sample_size_posts_df %>%
   mutate(true_value = true_value) %>% 
   mutate(cov95 = case_when(true_value <= .upper &
                                 true_value >= .lower ~ 1,
-                              TRUE ~0)) 
+                              TRUE ~0),
+         n_sim_label = case_when(n_sim == 30 ~ "a) n = 30",
+                                 n_sim == 100 ~ "b) n = 100",
+                                 n_sim == 300 ~ "c) n = 300",
+                                 TRUE ~ "d) n = 1000"),
+         true_value_label = case_when(true_value == -2 ~ "a) \u03bb = -2",
+                                      TRUE ~ "b) \u03bb = -1.6")) 
 
 sample_size_coverage = sample_size_summary %>% 
   group_by(n_sim, true_value) %>% 
@@ -93,32 +140,37 @@ sample_size_coverage = sample_size_summary %>%
   mutate(x = case_when(true_value == -1.6 ~ n_sim + 0.4*n_sim,
                        TRUE ~ n_sim - 0.25*n_sim))
 
-sample_size_plot = sample_size_summary %>% 
-  ggplot(aes(x = n_sim, y = b_Intercept, group = interaction(n_sim, true_value))) + 
-  geom_point(shape = 21, size = 0.01,
-             aes(group = true_value, color = as.character(cov95)), 
-             position = position_jitterdodge(dodge.width = 0.2, jitter.width = 0.01)) + 
-  scale_x_log10() +
+size_labels = 
+  sample_size_summary %>% 
+  distinct(true_value_label, n_sim) %>% 
+  mutate(n_sim_label = paste0("n = ", n_sim))
+
+sample_size_plot = sample_size_summary %>%
+  arrange(n_sim, true_value, .lower) %>% 
+  mutate(replicate = rep(1:1000, 8)) %>% 
+  ggplot(aes(y = replicate)) + 
+  geom_linerange(linewidth = 0.3,
+                 aes(x = b_Intercept, xmin = .lower, xmax = .upper,
+                     color = as.factor(cov95))) +
   scale_color_colorblind() +
-  labs(y = "\u03bb",
-       x = "Sample size",
-       color = "95% CrI contains true value?",
-       subtitle = "a) Sample Size") +
+  lemon::facet_rep_grid(n_sim ~ true_value_label, 
+                        space = "free") +
+  geom_vline(aes(xintercept = true_value)) +
+  labs(x = "\u03bb",
+       y = "Simulation",
+       color = "CrI contains true value?") +
+  ggthemes::scale_color_colorblind() +
+  geom_text(data = size_labels, aes(label = n_sim_label, x = -3.2, y = 120),
+            size = 3) +
   theme_default() +
-  geom_hline(data = . %>% ungroup %>% distinct(n_sim, true_value), aes(yintercept = true_value)) +
-  theme(strip.text.y = element_blank(),
-        legend.position = "top") + 
-  guides(color = "none") +
-  geom_text(data = sample_size_coverage, aes(y = true_value + 0.03, label = cov, x = x),
-            size = 2) + 
-  stat_summary(
-    geom = "point",
-    fun = "mean",
-    col = "black",
-    size = 2,
-    shape = 21,
-    position = position_dodge(width = 0.2)
-  )
+  theme(legend.position = "top",
+        strip.text.x = element_text(hjust = 0,
+                                    vjust = 3),
+        strip.text.y = element_blank()) +
+  scale_y_continuous(breaks = c(1, 500, 1000),
+  ) +
+  NULL
+
 
 #3) save plot
 ggview::ggview(sample_size_plot, width = 5, height = 6)
