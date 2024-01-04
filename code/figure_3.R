@@ -32,11 +32,13 @@ reg_coverage = bind_rows(reg_summaries) %>%
 
 #5) Make plot
 reg_coverage_plot = reg_coverage %>% 
-  # filter(replicate <= 100) %>%  
+  arrange(name_greek, true_values, .lower) %>% 
+  ungroup %>% 
+  mutate(replicate = rep(1:1000, 2)) %>% 
   ggplot(aes(x = replicate, y = value, color = as.factor(contains),
              shape = as.factor(contains))) + 
   geom_linerange(aes(ymin = .lower, ymax = .upper), linewidth = 0.62) +
-  facet_wrap(~name_greek, scales = "free", ncol = 1) +
+  facet_wrap(~name_greek, scales = "free", ncol = 2) +
   geom_hline(data = . %>% distinct(name_greek, true_values), 
              aes(yintercept = true_values)) +
   scale_color_colorblind() +
@@ -44,8 +46,9 @@ reg_coverage_plot = reg_coverage %>%
   labs(y = "Parameter values",
        x = "Simulation") +
   guides(color = "none") +
-  theme(strip.text = element_text(hjust = 0))
+  theme(strip.text = element_text(hjust = 0)) +
+  coord_flip()
 
 #6) Save plot
-ggview::ggview(reg_coverage_plot, height = 6.5, width = 6.5)
-save_plot_and_data(reg_coverage_plot, file_name = "plots/reg_coverage_plot",  height = 6.5, width = 6.5)
+ggview::ggview(reg_coverage_plot, height = 3, width = 6.5)
+save_plot_and_data(reg_coverage_plot, file_name = "plots/reg_coverage_plot",  height = 3, width = 6.5)
