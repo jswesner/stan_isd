@@ -77,7 +77,7 @@ sim_vary_lambdas = replicate(mapply(fit_mods, xmax = 1000, b = b), n = 2)
 saveRDS(sim_vary_lambdas, file = "models/sim_vary_lambdasTEMP.rds")
 
 # summarize posteriors
-sim_vary_lambdas = readRDS(file = "models/coverage_models/sim_vary_lambdas1000.rds")
+sim_vary_lambdas = readRDS(file = "models/coverage_models/sim_vary_lambdas1000_4chains.rds")
 
 indices_models <- seq(1, 21000, by = 3)  # Adjust these indices accordingly
 
@@ -115,24 +115,23 @@ for(i in 1:length(summaries_list)){
            model = "separate_models")
 }
 
-# repeat for model with b = -2. This was fit as part of the size range experiment
-size_range_brm1000 = readRDS("models/size_range_brm1000.rds")
+# # repeat for model with b = -2. This was fit as part of the size range experiment
+# size_range_brm1000 = readRDS("models/size_range_brm1000.rds")
+# 
+# separate_summaries_neg2 = NULL
+# 
+# for(i in 1:1000){
+#   separate_summaries_neg2[[i]] = summary(size_range_brm1000[[3]][, i]$fit)$summary %>% 
+#     as_tibble() %>% 
+#     rownames_to_column() %>% 
+#     filter(rowname == 1) %>% 
+#     mutate(true_value = -2,
+#            xmin = 1,
+#            xmax = 1000,
+#            model = "separate_models")
+# }
 
-separate_summaries_neg2 = NULL
-
-for(i in 1:1000){
-  separate_summaries_neg2[[i]] = summary(size_range_brm1000[[3]][, i]$fit)$summary %>% 
-    as_tibble() %>% 
-    rownames_to_column() %>% 
-    filter(rowname == 1) %>% 
-    mutate(true_value = -2,
-           xmin = 1,
-           xmax = 1000,
-           model = "separate_models")
-}
-
-
-separate_summaries = bind_rows(separate_summaries_neg2, separate_summaries_temp) %>% 
+separate_summaries = bind_rows(separate_summaries_temp) %>% 
   arrange(true_value, mean) %>% 
   mutate(replicate = rep(1:1000, 7))
 
