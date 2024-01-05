@@ -78,7 +78,7 @@ saveRDS(single_lambdas, file = "data/single_lambdas.rds")
 # pre load fitted model to use the update function for updating
 brm_regress_prior = readRDS(file = 'models/brm_regress_prior.rds')
 single_lambdas = readRDS(file = "data/single_lambdas.rds")
-
+brm_twostep_regress = readRDS("models/brm_twostep_regress.rds")
 
 brm_twostep_regress = brm(Estimate ~ predictor,
                           data = single_lambdas,
@@ -88,11 +88,17 @@ brm_twostep_regress = brm(Estimate ~ predictor,
                           file = "models/brm_twostep_regress.rds",
                           file_refit = "on_change")
 
+brm_twostep_regress = update(brm_twostep_regress, iter = 2000, chains = 4)
+
+saveRDS(brm_twostep_regress, file = "models/brm_twostep_regress.rds")
+
 brm_twostep_regress_rand = update(brm_twostep_regress, 
                                   formula = .~ predictor + (1|group),
                                   newdata = single_lambdas,
                                   file = "models/brm_twostep_regress_rand.rds",
-                                  file_refit = "on_change")
+                                  file_refit = "on_change", 
+                                  iter = 2000, 
+                                  chains = 4)
 # 
 # brm_twostep_regress_rand = brm(Estimate ~ predictor + (1|group), 
 #                           data = single_lambdas,
@@ -124,14 +130,15 @@ brm_twostep_regress_mi = brm(Estimate|mi(Est.Error) ~ predictor,
 #                            file = 'models/brm_regress_prior.rds',
 #                            file_refit = "on_change")
 # 
+
 brm_regress_weakprior_rand = update(brm_regress_prior,
                                     newdata = sim_data,
                                     prior = c(prior(normal(0, 0.5), class = "b"),
                                               prior(normal(-1.5, 1), class = "Intercept"),
                                               prior(exponential(1), class = "sd")),
                                     formula = . ~ predictor + (1|group),
-                                    iter = 1000,
-                                    chains = 3,
+                                    iter = 2000,
+                                    chains = 4,
                                     file_refit = "on_change",
                                     file = 'models/brm_regress_weakprior_rand.rds')
 #
@@ -141,160 +148,10 @@ brm_regress_prior_rand = update(brm_regress_prior,
                                           prior(normal(-1.5, 0.1), class = "Intercept"),
                                           prior(exponential(1), class = "sd")),
                                 formula = . ~ predictor + (1|group),
-                                iter = 1000,
-                                chains = 1,
+                                iter = 2000,
+                                chains = 4,
                                 file_refit = "on_change",
                                 file = 'models/brm_regress_prior_rand.rds')
-
-# get posteriors ----------------------------------------------------------
-brm_twostep_regress = readRDS("models/brm_twostep_regress.rds")
-brm_twostep_regress_mi = readRDS("models/brm_twostep_regress_mi.rds")
-brm_regress = readRDS("models/brm_regress.rds")
-brm_regress_prior = readRDS("models/brm_regress_prior.rds")
-brm_regress_weakprior_rand = readRDS("models/brm_regress_weakprior_rand.rds")
-brm_regress_prior_rand = readRDS("models/brm_regress_prior_rand.rds")
-
-a = brm_twostep_regress
-b = brm_twostep_regress_mi
-c = brm_regress
-d = brm_regress_prior
-e = brm_regress_weakprior_rand
-f = brm_regress_prior_rand
-
-mod_list = list(a,b,c,d,e,f)
-
-mod_draws = NULL
-
-for(i in 1:length(mod_list)) {
-  mod_draws[[i]] = tibble(predictor = seq(min(mod_list[[i]]$data$predictor),
-                                     max(mod_list[[i]]$data$predictor),
-                                     length.out = 20)) %>% 
-    mutate(counts = 1, # placeholders
-           xmin = 1, 
-           xmax = 1000,
-           Est.Error = 1,
-           group = 1) %>% 
-    add_epred_draws(mod_list[[i]], re_formula = NA) %>% 
-    mutate(model = i)
-}
-
-weak_rand_samples = mod_list[[5]]$data %>% 
-  distinct(predictor, group) %>% 
-  mutate(counts = 1, xmin = 1, xmax = 1000) %>% 
-  add_epred_draws(mod_list[[5]], re_formula = NULL) %>% 
-  mutate(model = 5,
-         model_name = "c) Bayesian - One Step\nHierarchical + Weak Priors")
-
-strong_rand_samples = mod_list[[6]]$data %>% 
-  distinct(predictor, group) %>% 
-  mutate(counts = 1, xmin = 1, xmax = 1000) %>% 
-  add_epred_draws(mod_list[[6]], re_formula = NULL) %>% 
-  mutate(model = 6,
-         model_name = "d) Bayesian - One Step\nHierarchical + Strong Priors")
-
-rand_samples = bind_rows(weak_rand_samples, strong_rand_samples)
-
-samples_all = rand_samples %>% 
-  group_by(model, model_name, predictor) %>% 
-  median_qi(.epred) 
-
-
-
-# plot posteriors ---------------------------------------------------------
-
-all_posts = bind_rows(mod_draws) %>% 
-  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
-                                model == 2 ~ "b) MLE - Two Steps\nWeighted Regression",
-                                # model == 3 ~ "c) One Step\nWeak Priors",
-                                # model == 4 ~ "d) One Step\nStrong Priors",
-                                model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
-                                model == 6 ~ "d) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
-  filter(model %in% c(1,2,5,6)) %>% 
-  mutate()
-
-all_samples = samples_all %>% 
-  mutate(dots = "Hierarchical Estimated \u03BB's") %>% 
-  bind_rows(single_lambdas %>% 
-              expand_grid(model = 1:2) %>%
-              # mutate(model = 1) %>% 
-              rename(.epred = Estimate) %>% 
-              mutate(dots = "Individually Estimated \u03BB's") %>% 
-              left_join(all_posts %>% ungroup %>% distinct(model, model_name))) %>% 
-  filter(!is.na(model_name)) %>% 
-  mutate(dot_size = case_when(predictor == 2.5 ~ 20,
-                              TRUE ~ 400),
-         outlier = case_when(predictor == 2.5 ~ "Outlier", 
-                             TRUE ~ "Not outlier"))  %>% 
-  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
-                                model == 2 ~ "b) MLE - Two Steps\nWeighted Regression",
-                                # model == 3 ~ "c) One Step\nWeak Priors",
-                                # model == 4 ~ "d) One Step\nStrong Priors",
-                                model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
-                                model == 6 ~ "d) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
-  filter(model %in% c(1,2,5,6)) %>% 
-  mutate(.lower = case_when(model == 2 ~ Q2.5,
-                            TRUE ~ .lower),
-         .upper = case_when(model == 2 ~ Q97.5, 
-                            TRUE ~ .upper))
-
-
-
-pars = lapply(mod_list, fixef)
-pars_id = NULL
-for(i in 1:length(pars)) {
-  pars_id[[i]] = pars[[i]] %>% as_tibble() %>% mutate(model = i,
-                                                      par = c("Intercept", "Slope"))
-  pars_id_out = bind_rows(pars_id)
-}
-
-pars_fixefs = pars_id_out %>% left_join(tibble(par = c("Intercept", "Slope"),
-                                               true_value = c(mean(single_lambdas$Estimate), beta))) %>% 
-  left_join(all_posts %>% ungroup %>% distinct(model, model_name)) %>% 
-  filter(!is.na(model_name)) %>% 
-  mutate(order = as.numeric(as.factor(str_sub(model_name, 1, 1))))
-
-slope_text = pars_fixefs  %>% 
-  mutate(across(where(is.numeric), round, 2)) %>% 
-  mutate(text = paste0(par, ": ", Estimate, " (", Q2.5, " to ", Q97.5, ")")) %>% 
-  filter(par == "Slope")
-
-hierarchical_regression_plot = all_posts %>% 
-  ggplot(aes(x = predictor, y = .epred)) + 
-  stat_lineribbon(.width = c(0.5, 0.95), color = "black",
-                  fill = "grey20", alpha = 0.4, 
-                  linewidth = 0.2) + 
-  facet_wrap(~model_name, nrow = 2) +
-  geom_pointrange(data = all_samples, aes(y = .epred, x = predictor,
-                                          ymin = .lower,
-                                          ymax = .upper,
-                                          shape = outlier,
-                                          alpha = dots),
-                  size = 0.2,
-                  linewidth = 0.2) +
-  facet_wrap(~model_name) +
-  scale_alpha_manual(values = c(0.4, .8)) +
-  theme(strip.text.x = element_text(angle = 0, hjust = 0),
-        legend.title = element_blank(),
-        legend.position = c(0.15, 0.9),
-        legend.text = element_text(size = 9),
-        text = element_text(size = 9)) + 
-  labs(y = "\u03BB",
-       x = "Predictor") +
-  # geom_abline(intercept = mean(lambda_sims$b), slope = -0.1) +
-  coord_cartesian(ylim = c(-1.8, -1)) +
-  guides(shape = "none",
-         alpha = "none") + 
-  geom_text(data = slope_text, aes(label = text),
-            x = -0.5, y = -1.7, size = 2)
-
-
-ggview::ggview(hierarchical_regression_plot, 
-               width = 6.5, height = 4.5, units = "in")
-
-saveRDS(hierarchical_regression_plot, file = "plots/fig4hierarchical_regression_plot.rds")
-ggsave(hierarchical_regression_plot, file = "plots/fig4hierarchical_regression_plot.jpg",
-       width = 6.5, height = 4.5, units = "in", dpi = 500)
-
 
 
 # posterior processing ----------------------------------------------------

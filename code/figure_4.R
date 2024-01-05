@@ -122,7 +122,7 @@ all_samples = samples_all %>%
                             TRUE ~ .upper))
 
 slope_text = pars_fixefs  %>% 
-  mutate(across(where(is.numeric), round, 3)) %>% 
+  mutate(across(where(is.numeric), round, 2)) %>% 
   mutate(text = paste0(par, ": ", Estimate, " (", Q2.5, " to ", Q97.5, ")")) %>% 
   filter(par == "Slope")
 
