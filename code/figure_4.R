@@ -79,7 +79,7 @@ for(i in 1:length(pars)) {
 
 all_posts = bind_rows(mod_draws) %>% 
   mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
-                                model == 2 ~ "b) Two Steps\nErrors in Variables Regression",
+                                model == 2 ~ "b) Two Steps\nRegression with measurement error",
                                 # model == 3 ~ "c) One Step\nWeak Priors",
                                 # model == 4 ~ "d) One Step\nStrong Priors",
                                 model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
@@ -110,7 +110,7 @@ all_samples = samples_all %>%
          outlier = case_when(predictor == 2.5 ~ "Outlier", 
                              TRUE ~ "Not outlier")) %>% 
   mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
-                                model == 2 ~ "b) Two Steps\nErrors in Variables Regression",
+                                model == 2 ~ "b) Two Steps\nRegression with measurement error",
                                 # model == 3 ~ "c) One Step\nWeak Priors",
                                 # model == 4 ~ "d) One Step\nStrong Priors",
                                 model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
@@ -122,7 +122,7 @@ all_samples = samples_all %>%
                             TRUE ~ .upper))
 
 slope_text = pars_fixefs  %>% 
-  mutate(across(where(is.numeric), round, 2)) %>% 
+  mutate(across(where(is.numeric), round, 3)) %>% 
   mutate(text = paste0(par, ": ", Estimate, " (", Q2.5, " to ", Q97.5, ")")) %>% 
   filter(par == "Slope")
 
