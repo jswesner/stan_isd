@@ -76,6 +76,17 @@ for(i in 1:length(pars)) {
   pars_id_out = bind_rows(pars_id)
 }
 
+
+all_posts = bind_rows(mod_draws) %>% 
+  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
+                                model == 2 ~ "b) Two Steps\nErrors in Variables Regression",
+                                # model == 3 ~ "c) One Step\nWeak Priors",
+                                # model == 4 ~ "d) One Step\nStrong Priors",
+                                model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
+                                model == 6 ~ "d) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
+  filter(model %in% c(1,2,5,6)) 
+
+
 pars_fixefs = pars_id_out %>% left_join(tibble(par = c("Intercept", "Slope"),
                                                true_value = c(mean(single_lambdas$Estimate), beta))) %>% 
   left_join(all_posts %>% ungroup %>% distinct(model, model_name)) %>% 
@@ -85,20 +96,11 @@ pars_fixefs = pars_id_out %>% left_join(tibble(par = c("Intercept", "Slope"),
 
 #6) Wrangle data for the final plot
 
-all_posts = bind_rows(mod_draws) %>% 
-  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
-                                # model == 2 ~ "b) Two Steps\nErrors in Variables Regression",
-                                # model == 3 ~ "c) One Step\nWeak Priors",
-                                # model == 4 ~ "d) One Step\nStrong Priors",
-                                model == 5 ~ "b) Bayesian - One Step\nHierarchical + Weak Priors",
-                                model == 6 ~ "c) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
-  filter(model %in% c(1,5,6)) 
 
 all_samples = samples_all %>% 
   mutate(dots = "Hierarchical Estimated \u03BB's") %>% 
   bind_rows(single_lambdas %>% 
-              # expand_grid(model = 1:6) %>% 
-              mutate(model = 1) %>% 
+              expand_grid(model = 1:2) %>%
               rename(.epred = Estimate) %>% 
               mutate(dots = "Individually Estimated \u03BB's") %>% 
               left_join(all_posts %>% ungroup %>% distinct(model, model_name))) %>% 
@@ -106,7 +108,18 @@ all_samples = samples_all %>%
   mutate(dot_size = case_when(predictor == 2.5 ~ 20,
                               TRUE ~ 400),
          outlier = case_when(predictor == 2.5 ~ "Outlier", 
-                             TRUE ~ "Not outlier")) 
+                             TRUE ~ "Not outlier")) %>% 
+  mutate(model_name = case_when(model == 1 ~ "a) MLE - Two Steps\nSimple Linear Regression",
+                                model == 2 ~ "b) Two Steps\nErrors in Variables Regression",
+                                # model == 3 ~ "c) One Step\nWeak Priors",
+                                # model == 4 ~ "d) One Step\nStrong Priors",
+                                model == 5 ~ "c) Bayesian - One Step\nHierarchical + Weak Priors",
+                                model == 6 ~ "d) Bayesian - One Step\nHierarchical + Strong Priors")) %>%
+  filter(model %in% c(1,2,5,6)) %>% 
+  mutate(.lower = case_when(model == 2 ~ Q2.5,
+                            TRUE ~ .lower),
+         .upper = case_when(model == 2 ~ Q97.5,
+                            TRUE ~ .upper))
 
 slope_text = pars_fixefs  %>% 
   mutate(across(where(is.numeric), round, 2)) %>% 
@@ -116,17 +129,18 @@ slope_text = pars_fixefs  %>%
 #7) Make plot
 hierarchical_regression_plot = all_posts %>% 
   ggplot(aes(x = predictor, y = .epred)) + 
-  stat_lineribbon(.width = c(0.5, 0.95), color = "#e69f00",
-                  fill = "#e69f00", alpha = 0.5, 
+  stat_lineribbon(.width = c(0.5, 0.95), color = "gray30",
+                  fill = "gray30",
+                  alpha = 0.5,
                   linewidth = 0.2) + 
-  facet_wrap(~model_name, nrow = 1) +
+  facet_wrap(~model_name, nrow = 2) +
   geom_pointrange(data = all_samples, aes(y = .epred, x = predictor,
                                           ymin = .lower,
                                           ymax = .upper,
-                                          shape = outlier,
-                                          alpha = dots),
+                                          shape = outlier),
                   size = 0.2,
-                  linewidth = 0.2) +
+                  linewidth = 0.2,
+                  color = "gray30") +
   facet_wrap(~model_name) +
   scale_alpha_manual(values = c(0.4, .8)) +
   theme(strip.text.x = element_text(angle = 0, hjust = 0),
@@ -145,6 +159,9 @@ hierarchical_regression_plot = all_posts %>%
 
 
 ggview::ggview(hierarchical_regression_plot, 
-               width = 6.5, height = 2.5, units = "in")
+               width = 6.5, height = 6.5, units = "in")
+
 save_plot_and_data(hierarchical_regression_plot, file_name = "plots/fig4hierarchical_regression_plot",
-       width = 6.5, height = 3, dpi = 500)
+       width = 6.5, height = 6.5, dpi = 500)
+save_plot_and_data(hierarchical_regression_plot, file_name = "ms/fig4hierarchical_regression_plot",
+                   width = 6.5, height = 6.5, dpi = 500)

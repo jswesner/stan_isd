@@ -68,6 +68,6 @@ coverage_plot = plot_data %>%
 # coverage_plot = readRDS("plots/coverage_plot.rds")
 ggview::ggview(coverage_plot, width = 6.5, height = 9)
 
-save_plot_and_data(coverage_plot, file_name = "plots/coverage_plot", width = 6.5, height = 9)
-save_plot_and_data(coverage_plot, file_name = "ms/coverage_plot", width = 6.5, height = 9)
+save_plot_and_data(coverage_plot, file_name = "plots/fig1coverage_plot", width = 6.5, height = 9)
+save_plot_and_data(coverage_plot, file_name = "ms/fig1coverage_plot", width = 6.5, height = 9)
 
