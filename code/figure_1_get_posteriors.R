@@ -7,16 +7,19 @@ library(brms)
 
 # Figure 1a - separate models ---------------------------------------------------------
 
-# summarize posteriors
-sim_vary_lambdas = readRDS(file = "models/fig1a_mods.rds")
+# 1) load models
+# This loads 1000-7000 fitted models. It is too big for GitHub (500-1000MB), so we have to load it from Zenodo.
+# It might take 5-10 minutes
+options(timeout=1000)
+sim_vary_lambdas = readRDS(url("https://zenodo.org/records/10685071/files/fig1a_mods.rds?download=1"))
 
-# get only the stanfits, which are stored in every three slots
+# 2) get only the stanfits, which are stored in every three slots
 sim_vary_lambdas_fits = sim_vary_lambdas[sapply(sim_vary_lambdas, function(x) is(x, "stanfit"))]
 
-# check that there are no missing fits
+# 3) check that there are no missing fits
 which(sapply(sim_vary_lambdas_fits, is.null))
 
-# extract posterior summaries
+# 4) extract posterior summaries
 separate_summaries_temp = NULL
 
 for(i in 1:length(sim_vary_lambdas_fits)){
@@ -27,7 +30,7 @@ for(i in 1:length(sim_vary_lambdas_fits)){
            model_number = i)
 }
 
-# combine posterior summaries and save
+# 5) combine posterior summaries and save
 separate_summaries = bind_rows(separate_summaries_temp) %>% 
   mutate(replicate = rep(1:1000, 7),
          true_value = rep(c(-2.4, -2.2, -2, -1.8, -1.6, -1.4, -1.2), 1000)) %>% 
@@ -44,8 +47,11 @@ separate_summaries = bind_rows(separate_summaries_temp) %>%
 
 # Figure 1b - fixed models----------------------------------------------------
 
-# 1) load fitted models
-fixed_mods = readRDS("models/fig1b_mods.rds")
+# 1) load fitted 
+# This loads 1000-7000 fitted models. It is too big for GitHub (500-1000MB), so we have to load it from Zenodo. 
+options(timeout=1000)
+fixed_mods = readRDS(url("https://zenodo.org/records/10685071/files/fig1b_mods.rds?download=1"))
+
 
 # 2) extract posterior summaries using a for loop
 fixed_lambda_summaries_list = NULL
@@ -74,8 +80,12 @@ fixed_lambda_summaries = bind_rows(fixed_lambda_summaries_list)
 
 
 # Figure 1c - varying intercept models -------------------------------------------------
-varint_mod = readRDS("models/fig1c_mods.rds")
+# 1) load models
+# This loads 1000-7000 fitted models. It is too big for GitHub (500-1000MB), so we have to load it from Zenodo. 
+options(timeout=1000)
+varint_mod = readRDS(url("https://zenodo.org/records/10685071/files/fig1c_mods.rds?download=1"))
 
+#2) extract posteriors
 posts_varint_list = NULL
 
 for(i in 1:length(varint_mod)){
@@ -99,6 +109,7 @@ for(i in 1:length(varint_mod)){
            iter = 2000)
 }
 
+# 3) bind posteriors and save
 var_lambda_summaries = bind_rows(posts_varint_list) %>% 
   mutate(replicate = rep(1:1000, each = 7)) 
 
