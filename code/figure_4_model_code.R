@@ -12,14 +12,14 @@ rstan_options("auto_write" = TRUE)
 theme_set(theme_default())
 
 
-# simulate data
+# 1) set data simulation parameters
 set.seed = 123123
 intercept = -1.5
-# var_int_sd = 0.1
 beta = -0.1
 n_ind = 300
 reps = 12
-  
+
+# 2) make grid of lambdas
 lambda_sims = tibble(group = (1:1)) %>% 
     expand_grid(predictor = -seq(-2, 2, length.out = 12)) %>% 
     # expand_grid(replicates = 1:2) %>% 
@@ -28,8 +28,9 @@ lambda_sims = tibble(group = (1:1)) %>%
   add_row(group = 1,
           predictor = 2.5, b = -1.1, id = 7) 
   
-saveRDS(lambda_sims, file = "data/lambda_sims.rds")
+saveRDS(lambda_sims, file = "data/lambda_sims.rds") # save for plotting later
 
+# 3) simulate data
 sim_data = lambda_sims %>% 
   expand_grid(individual = 1:n_ind) %>% 
     mutate(xmin = 1, xmax = 1000,
@@ -44,23 +45,25 @@ sim_data = lambda_sims %>%
   mutate(group = as.factor(predictor))
 
 
-# Estimate lambdas --------------------------------------------------------
+# 4) fit two-step models -------------------------------------
+# Step 1: estimate lambdas separately
 
+# split data into a list (one for each lambda)
 sim_data_list = sim_data %>% group_by(group) %>% group_split()
 
+# fit and save separate intercept only models to each lambda
 brm_single_mods = brm_multiple(x | vreal(counts, xmin, xmax) ~ 1,
                                data = sim_data_list,
                                stanvars = stanvars,
                                family = paretocounts(),
-                               # prior = c(prior(normal(-1.5, 0.01), class = "Intercept")),
-                               chains = 1, iter = 1000,
+                               chains = 4, iter = 2000,
                                cores = 4,
                                combine = F)
 
 saveRDS(brm_single_mods, file = "models/brm_single_mods.rds")
 brm_single_mods = readRDS("models/brm_single_mods.rds")
 
-
+# extract, wrangle, and save posterior lambdas from each separate model
 brm_single_fixefs = NULL
 
 for(i in 1:length(brm_single_mods)){
@@ -74,124 +77,49 @@ single_lambdas = bind_rows(brm_single_fixefs) %>%
 
 saveRDS(single_lambdas, file = "data/single_lambdas.rds")
 
-# fit models ---------------------------------------------------------------
-# pre load fitted model to use the update function for updating
-brm_regress_prior = readRDS(file = 'models/brm_regress_prior.rds')
-single_lambdas = readRDS(file = "data/single_lambdas.rds")
-brm_twostep_regress = readRDS("models/brm_twostep_regress.rds")
-
+# Step 2: Fit Gaussian regression between lambdas and predictor
+# simple linear regression
 brm_twostep_regress = brm(Estimate ~ predictor,
                           data = single_lambdas,
                           family = gaussian(),
-                          iter = 1000,
-                          chains = 4,
-                          file = "models/brm_twostep_regress.rds",
-                          file_refit = "on_change")
+                          iter = 2000,
+                          chains = 4)
 
-brm_twostep_regress = update(brm_twostep_regress, iter = 2000, chains = 4)
+# saveRDS(brm_twostep_regress, file = "models/fig4a_mod.rds")
 
-saveRDS(brm_twostep_regress, file = "models/brm_twostep_regress.rds")
-
-brm_twostep_regress_rand = update(brm_twostep_regress, 
-                                  formula = .~ predictor + (1|group),
-                                  newdata = single_lambdas,
-                                  file = "models/brm_twostep_regress_rand.rds",
-                                  file_refit = "on_change", 
-                                  iter = 2000, 
-                                  chains = 4)
-# 
-# brm_twostep_regress_rand = brm(Estimate ~ predictor + (1|group), 
-#                           data = single_lambdas,
-#                           family = gaussian(),
-#                           iter = 1000, 
-#                           chains = 4,
-#                           file = "models/brm_twostep_regress_rand.rds",
-#                           file_refit = "on_change")
-# 
+# weighted regression
 brm_twostep_regress_mi = brm(Estimate|mi(Est.Error) ~ predictor,
                              data = single_lambdas,
                              iter = 2000,
-                             chains = 4,
-                             file = "models/brm_twostep_regress_mi.rds",
-                             file_refit = "on_change")
-# 
-# brm_regress = brm(x | vreal(counts, xmin, xmax) ~ predictor, 
-#                                        data = sim_data,
-#                                        stanvars = stanvars,
-#                                        family = paretocounts(),
-#                                        # prior = c(prior(normal(-1.5, 0.01), class = "Intercept")),
-#                                        chains = 1, iter = 1000,
-#                                        cores = 4,
-#                   file = 'models/brm_regress.rds',
-#                   file_refit = "on_change")
-# 
-# brm_regress_prior = update(brm_regress, 
-#                            prior = c(prior(normal(-0.1, 0.05), class = "b")),
-#                            file = 'models/brm_regress_prior.rds',
-#                            file_refit = "on_change")
-# 
+                             chains = 4)
 
-brm_regress_weakprior_rand = update(brm_regress_prior,
-                                    newdata = sim_data,
-                                    prior = c(prior(normal(0, 0.5), class = "b"),
-                                              prior(normal(-1.5, 1), class = "Intercept"),
-                                              prior(exponential(1), class = "sd")),
-                                    formula = . ~ predictor + (1|group),
-                                    iter = 2000,
-                                    chains = 4,
-                                    file_refit = "on_change",
-                                    file = 'models/brm_regress_weakprior_rand.rds')
-#
-brm_regress_prior_rand = update(brm_regress_prior,
-                                newdata = sim_data,
-                                prior = c(prior(normal(-0.1, 0.02), class = "b"),
-                                          prior(normal(-1.5, 0.1), class = "Intercept"),
-                                          prior(exponential(1), class = "sd")),
-                                formula = . ~ predictor + (1|group),
-                                iter = 2000,
-                                chains = 4,
-                                file_refit = "on_change",
-                                file = 'models/brm_regress_prior_rand.rds')
+# saveRDS(brm_twostep_regress, file = "models/fig4b_mod.rds")
 
 
-# posterior processing ----------------------------------------------------
+# 5) fit hierarchical models -------------------------------------------------
 
-as_draws_df(a) %>% 
-  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
-as_draws_df(e) %>% 
-  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
-as_draws_df(f) %>% 
-  reframe(slope_test = sum(b_predictor < 0)/nrow(.))
+# fig4c: weak prior
+brm_regress_weakprior_rand = brm(x | vreal(counts, xmin, xmax) ~ predictor + (1|group),
+                                 data = sim_data,
+                                 stanvars = stanvars,
+                                 family = paretocounts(),
+                                 prior = c(prior(normal(0, 0.5), class = "b"),
+                                           prior(normal(-1.5, 1), class = "Intercept"),
+                                           prior(exponential(1), class = "sd")),
+                                 iter = 2000,
+                                 chains = 4)
 
+# saveRDS(brm_regress_weakprior_rand, file = "models/fig4c_mod.rds")
 
-# compare slopes ----------------------------------------------------------
+# fig4d: strong prior
+brm_regress_strongprior_rand = brm(x | vreal(counts, xmin, xmax) ~ predictor + (1|group),
+                             data = sim_data,
+                             stanvars = stanvars,
+                             family = paretocounts(),
+                             prior = c(prior(normal(-0.1, 0.02), class = "b"),
+                                       prior(normal(-1.5, 0.1), class = "Intercept"),
+                                       prior(exponential(1), class = "sd")),
+                             iter = 2000,
+                             chains = 4)
 
-pars = lapply(mod_list, fixef)
-pars_id = NULL
-for(i in 1:length(pars)) {
-  pars_id[[i]] = pars[[i]] %>% as_tibble() %>% mutate(model = i,
-                                                      par = c("Intercept", "Slope"))
-  pars_id_out = bind_rows(pars_id)
-}
-
-pars_fixefs = pars_id_out %>% left_join(tibble(par = c("Intercept", "Slope"),
-                                               true_value = c(mean(single_lambdas$Estimate), beta))) %>% 
-  left_join(all_posts %>% ungroup %>% distinct(model, model_name)) %>% 
-  filter(!is.na(model_name)) %>% 
-  mutate(order = as.numeric(as.factor(str_sub(model_name, 1, 1))))
-
-pars_fixefs %>% 
-  mutate(par = case_when(par == "Intercept" ~ "a) Intercept", 
-                         TRUE ~ "b) Slope")) %>% 
-  ggplot(aes(y = reorder(model_name, -order), x = Estimate, xmin = Q2.5, xmax = Q97.5)) + 
-  geom_pointrange() +
-  facet_wrap(~par, scales = "free_x") +
-  geom_vline(aes(xintercept = true_value), linetype = "dashed") +
-  labs(y = "",
-       x = "Parameter Estimate") +
-  theme(strip.text.x = element_text(hjust = 0))
-
-
-# weighted regression  ----------------------------------------------------
-
-
+# saveRDS(brm_regress_strongprior_rand, file = "models/fig4d_mod.rds")
