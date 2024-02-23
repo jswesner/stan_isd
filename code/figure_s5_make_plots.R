@@ -30,6 +30,7 @@ prior_sens_plot = all_fits %>%
   NULL
 
 ggview::ggview(prior_sens_plot, width = 6.5, height = 4)
-save_plot_and_data(prior_sens_plot, file_name = "ms/figS1", width = 6.5, height = 4, dpi = 500)
+save_plot_and_data(prior_sens_plot, file_name = "ms/figs5_prior_sensitivity", width = 6.5, height = 4, dpi = 500)
+ggsave(prior_sens_plot, file = "plots/figs5_prior_sensitivity.jpg", width = 6.5, height = 4, dpi = 500)
 
 
