@@ -74,7 +74,7 @@ fit_priors = list(fit_prior_a,
                   fit_prior_f,
                   fit_prior_g)
 
-saveRDS(fit_priors, file = "models/fit_priors_1.5.rds")
+saveRDS(fit_priors, file = "models/figs5_mods_1.5.rds")
 
 priors_to_add = tibble(fit = 1:length(fit_priors),
                        prior_mean = -1.5,
@@ -88,15 +88,7 @@ for(i in 1:length(fit_priors)) {
     left_join(priors_to_add)
 }
 
-#5) Make plot
-bind_rows(fit_prior_temp) %>% 
-  ggplot(aes(x = prior_sd, y = b_Intercept)) + 
-  stat_halfeye(aes(group = prior_sd)) +
-  scale_x_log10() +
-  NULL
-
-
-#6) repeat with different prior means
+#5) repeat with different prior means
 
 # -2
 fit_prior_a_temp = update(reg_fit, prior = c(prior(normal(-2, 5), class = "Intercept")), chains = 1, iter = 10)
@@ -128,7 +120,7 @@ fit_priors = list(fit_prior_a,
                   fit_prior_f,
                   fit_prior_g)
 
-saveRDS(fit_priors, file = "models/fit_priors_2.rds")
+saveRDS(fit_priors, file = "models/figs5_mods_2.rds")
 
 # -1.8
 fit_prior_a_temp = update(reg_fit, prior = c(prior(normal(-1.8, 5), class = "Intercept")), chains = 1, iter = 10)
@@ -160,7 +152,7 @@ fit_priors = list(fit_prior_a,
                   fit_prior_f,
                   fit_prior_g)
 
-saveRDS(fit_priors, file = "models/fit_priors_1.8.rds")
+saveRDS(fit_priors, file = "models/figs5_mods_1.8.rds")
 
 
 # -1.2
@@ -193,7 +185,7 @@ fit_priors = list(fit_prior_a,
                   fit_prior_f,
                   fit_prior_g)
 
-saveRDS(fit_priors, file = "models/fit_priors_1.2.rds")
+saveRDS(fit_priors, file = "models/figs5_mods_1.2.rds")
 
 
 

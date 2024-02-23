@@ -4,10 +4,10 @@ library(isdbayes)
 library(tidybayes)
 
 # 1) load fitted models
-a1.2 = readRDS(file = "models/fit_priors_1.2.rds")
-a1.5 = readRDS(file = "models/fit_priors_1.5.rds")
-a1.8 = readRDS(file = "models/fit_priors_1.8.rds")
-a2.0 = readRDS(file = "models/fit_priors_2.rds")
+a1.2 = readRDS(file = "models/figs5_mods_1.2.rds")
+a1.5 = readRDS(file = "models/figs5_mods_1.5.rds")
+a1.8 = readRDS(file = "models/figs5_mods_1.8.rds")
+a2.0 = readRDS(file = "models/figs5_mods_2.rds")
 
 # 2) combine models
 prior_fits = c(a1.2, a1.5, a1.8, a2.0)
