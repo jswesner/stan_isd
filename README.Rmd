@@ -17,19 +17,30 @@ This repository contains code to recreate the analyses in Wesner et al. *Bayesia
 
 ## Recreate analyses
 
-All figures and tables in the main text can be recreated by running the R scripts in the `\code` folder. In that folder, each figure has two associated scripts: "figure_x.R" and "figure_x_model_and_code.R". The **"figure_x.R"** scripts recreate the .rds and .jpg files of each figure. They plot the model results obtained from the **"figure_x_model_code.R"** scripts.
+All figures and tables in the main text can be recreated by running the R scripts in the `\code` folder.
 
-For example, `code/figure_4.R` creates the figure below, showing how three modeling approaches (a-c) deal with an outlier in the size spectrum parameter $\lambda$.
+The scripts have the following naming convention and function:
+
+**1) figure_X_fit_models.R**: Simulates data and fits models associated with Figure X in the manuscript.
+
+**2) figure_X_get_posteriors.R**: Wrangles posterior summaries from the fitted models.
+
+**3) figure_X_make_plots.R**: Creates the figures from the wrangled posteriors.
+
+When there is minimal wrangling, some of the steps are merged. For example, `code/get_posteriors_make_plots.R` wrangles the posteriors and creates the figure below. It shows three modeling approaches (a-d) for dealing with an outlier in the size spectrum parameter $\lambda$.
 
 ```{r echo=FALSE, fig.cap = "", out.width = '100%'}
 
-knitr::include_graphics(here::here("ms/fig4hierarchical_regression_plot.jpg"))
+knitr::include_graphics(here::here("plots/fig4hierarchical_regression_plot.jpg"))
 ```
 
-The code to simulate data and fit these models is in `code/figure_4_model_code.R`. That code requires the installation of `rstan`, `brms`, and `isdbayes`, which in turn require installation of an external C++ compiler. However, all models are already compiled and saved in the `\models` folder. Unless you'd like to refit each model, there is no need to run `code/figure_4_model_code.R`.
+All scripts are self-contained. In other words, you can make the plots without needing to run the models or extract the posteriors, and vice versa. Posterior summaries are stored in the folder `\posteriors`.
 
 ## Needing a cluster
 
-For most of the scripts, running the modeling exercise will not work on a personal computer. It requires a cluster, because the models are repeatedly fit 1000 times, resulting in large files. In the code, this is achieved using the `replicate()` function, with n = 1000. To avoid automatically running large models, the replicates in the scripts are set to a lower value, like n = 2.
+Most of the model scripts will not work on a personal computer. They require a cluster, because the models are repeatedly fit 1000 times, resulting in large files. However, fitted models are located in the `\models` folder. Some of the model fits were too big to upload to GitHub (e.g., Figures 1-3). Those model fits in the main manusript are instead stored on Zenodo [here](https://zenodo.org/records/10689765). Supplementary models are stored [here](https://zenodo.org/records/10698127). In the posterior scripts, those models are loaded from the Zenodo urls.
 
-Some of the fitted model simulations were too big to upload to GitHub. However, the fitted models are summarized (e.g., quantiles of the posteriors) before plotting and all of those summaries are available either in the `\models` folder or the `\posteriors` folder.
+## References
+
+::: {#refs}
+:::
