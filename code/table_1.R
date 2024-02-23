@@ -10,7 +10,6 @@ all_lambda_summaries = readRDS(file = "posteriors/fig1abc_posterior_summaries.rd
 
 #2) calculate coverage and bias
 coverage = all_lambda_summaries %>% 
-  # filter(xmax == 1000) %>% # limit to xmax = 1000
   mutate(cov95 = case_when(true_value > `2.5%` & true_value <`97.5%` ~ "yes", TRUE ~ "no")) %>%
   group_by(true_value, model, cov95) %>% 
   tally() %>%
