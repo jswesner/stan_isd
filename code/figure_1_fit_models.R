@@ -221,3 +221,7 @@ varint_mods = replicate(n = n_replicates, sim_varint(xmax = 1000, b = b))
 # saveRDS(varint_mods, file = "models/fig1c_mods.rds")
 
 
+
+
+
+
