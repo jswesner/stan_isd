@@ -85,7 +85,7 @@ save_plot_and_data(plot_compare_chains_rhats, width = 6, height = 9,
 
 # Summarize ---------------------------------------------------------------
 
-compare_lambdas = readRDS("ms/figs4_compare_chains.rds")
+compare_lambdas = readRDS("ms/figs3_compare_chains.rds")
 compare_rhats = readRDS("ms/figs4_compare_chains_rhats.rds")
 
 
