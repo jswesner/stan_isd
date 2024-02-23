@@ -11,10 +11,6 @@ source("code/sandbox/save_plot_and_data.R") # custom function that saves image f
 
 theme_set(theme_default())
 
-# load final plot
-hierarchical_regression_plot = readRDS("plots/fig4hierarchical_regression_plot.rds")
-
-
 #1) load fitted models 
 a = readRDS("models/fig4a_mod.rds")
 b = readRDS("models/fig4b_mod.rds")

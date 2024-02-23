@@ -11,7 +11,6 @@ rstan_options("auto_write" = TRUE)
 
 theme_set(theme_default())
 
-
 # 1) set data simulation parameters
 set.seed = 123123
 intercept = -1.5

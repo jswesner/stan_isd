@@ -11,7 +11,7 @@ library(brms)
 # This loads 1000-7000 fitted models. It is too big for GitHub (500-1000MB), so we have to load it from Zenodo.
 # It might take 5-10 minutes
 options(timeout=1000)
-sim_vary_lambdas = readRDS(url("https://zenodo.org/records/10685071/files/fig1a_mods.rds?download=1"))
+sim_vary_lambdas = readRDS(url("https://zenodo.org/records/10689765/files/fig1a_mods.rds?download=1"))
 
 # 2) get only the stanfits, which are stored in every three slots
 sim_vary_lambdas_fits = sim_vary_lambdas[sapply(sim_vary_lambdas, function(x) is(x, "stanfit"))]
@@ -50,7 +50,7 @@ separate_summaries = bind_rows(separate_summaries_temp) %>%
 # 1) load fitted 
 # This loads 1000-7000 fitted models. It is too big for GitHub (500-1000MB), so we have to load it from Zenodo. 
 options(timeout=1000)
-fixed_mods = readRDS(url("https://zenodo.org/records/10685071/files/fig1b_mods.rds?download=1"))
+fixed_mods = readRDS(url("https://zenodo.org/records/10689765/files/fig1b_mods.rds?download=1"))
 
 
 # 2) extract posterior summaries using a for loop
@@ -83,7 +83,7 @@ fixed_lambda_summaries = bind_rows(fixed_lambda_summaries_list)
 # 1) load models
 # This loads 1000-7000 fitted models. It is too big for GitHub (500-1000MB), so we have to load it from Zenodo. 
 options(timeout=1000)
-varint_mod = readRDS(url("https://zenodo.org/records/10685071/files/fig1c_mods.rds?download=1"))
+varint_mod = readRDS(url("https://zenodo.org/records/10689765/files/fig1c_mods.rds?download=1"))
 
 #2) extract posteriors
 posts_varint_list = NULL
