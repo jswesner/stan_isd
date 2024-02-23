@@ -31,8 +31,8 @@ plot_sampling_area = bind_rows(mods_posts) %>%
        x = "\u03bb")
 
 
-saveRDS(plot_sampling_area, file = "plots/figure_s2_sampling_area.rds")
-ggsave(plot_sampling_area, file = "plots/figure_s2_sampling_area.jpg",
+saveRDS(plot_sampling_area, file = "plots/figs2_sampling_area.rds")
+ggsave(plot_sampling_area, file = "plots/figs2_sampling_area.jpg",
        width = 6, height = 4, dpi = 500)
-ggsave(plot_sampling_area, file = "ms/figure_s2_sampling_area.jpg",
+ggsave(plot_sampling_area, file = "ms/figs2_sampling_area.jpg",
        width = 6, height = 4, dpi = 500)
