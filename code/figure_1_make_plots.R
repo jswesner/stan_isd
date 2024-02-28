@@ -49,9 +49,11 @@ coverage_plot = plot_data %>%
              aes(xintercept = true_value)) +
   theme(legend.position = "top",
         strip.text.x = element_text(hjust = 0,
-                                    vjust = 3)) +
+                                    vjust = 3),
+        axis.text.x = element_text(size = 9)) +
   scale_y_continuous(breaks = c(1, 500, 1000),
   ) +
+  scale_x_continuous(breaks = scales::pretty_breaks(3)) +
   coord_cartesian(clip = "off",
                   ylim = c(1, 1100)) +
   NULL
@@ -59,8 +61,9 @@ coverage_plot = plot_data %>%
 # 4) View and save plot
 ggview::ggview(coverage_plot, width = 6.5, height = 9)
 
-save_plot_and_data(coverage_plot, file_name = "plots/fig1coverage_plot", width = 6.5, height = 9)
-save_plot_and_data(coverage_plot, file_name = "ms/fig1coverage_plot", width = 6.5, height = 9)
+save_plot_and_data(coverage_plot, file_name = "plots/fig1coverage_plot", width = 6.5, height = 9.2)
+save_plot_and_data(coverage_plot, file_name = "ms/fig1coverage_plot", width = 6.5, height = 9.2,
+                   file_type = "pdf")
 
 # 5) Summarize coverage
 

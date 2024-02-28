@@ -50,7 +50,7 @@ sample_size_plot = sample_size_summary %>%
   guides(color = "none") +
   geom_text(data = sample_size_coverage, aes(y = true_value + 0.03, label = cov, x = x),
             size = 2) +
-  geom_point(shape = 21, size = 0.2,
+  geom_point(shape = 1, size = 0.05,
              aes(color = as.factor(cov95)), position = position_dodge(width = 0.1)) 
 
 # 5) save plot
@@ -114,7 +114,7 @@ range_of_sizes = xmax_lambdas %>%
   guides(color = guide_legend(override.aes = list(size=3))) +
   geom_text(data = xmax_coverage, aes(y = true_value + 0.03, label = cov, x = x),
             size = 2.4) +
-  geom_point(shape = 21, size = 0.2,
+  geom_point(shape = 1, size = 0.05,
              aes(group = true_value, color = cov95), position = position_dodge(width = 0.4)) 
 
 #3) save plot
@@ -123,7 +123,7 @@ save_plot_and_data(range_of_sizes, file_name = "plots/fig2b_range_of_sizes", wid
 
 #4) calculate bias
 xmax_lambdas %>% 
-  mutate(bias = mean - true_value) %>% 
+  mutate(bias = b_Intercept - true_value) %>% 
   group_by(orders_mag, true_value) %>% 
   reframe(mean_bias = mean(bias),
           sd_bias = sd(bias)) 
@@ -131,7 +131,7 @@ xmax_lambdas %>%
 #5) precision
 xmax_lambdas %>% 
   group_by(orders_mag, true_value) %>% 
-  mutate(range = max(mean) - min(mean)) %>% 
+  mutate(range = max(b_Intercept) - min(b_Intercept)) %>% 
   distinct(orders_mag, true_value, range)
 
 
@@ -145,5 +145,5 @@ sample_size_range = (sample_size_plot + ylim(-3, -1.2) +
   guides(color = "none")) / (range_of_sizes + ylim(-3, -1.2) + guides(color = "none"))
 
 ggview::ggview(sample_size_range, width = 5.5, height = 9)
-save_plot_and_data(sample_size_range, file_name = "ms/fig2", width = 5.5, height = 9, dpi = 500)
+save_plot_and_data(sample_size_range, file_name = "ms/Figure2", file_type = "pdf", width = 5.5, height = 9, dpi = 500)
 

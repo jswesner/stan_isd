@@ -151,5 +151,5 @@ ggview::ggview(hierarchical_regression_plot,
 
 save_plot_and_data(hierarchical_regression_plot, file_name = "plots/fig4hierarchical_regression_plot",
        width = 6.5, height = 6.5, dpi = 500)
-save_plot_and_data(hierarchical_regression_plot, file_name = "ms/fig4hierarchical_regression_plot",
+save_plot_and_data(hierarchical_regression_plot, file_name = "ms/Figure4", file_type = "pdf",
                    width = 6.5, height = 6.5, dpi = 500)

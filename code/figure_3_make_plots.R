@@ -25,4 +25,4 @@ reg_coverage_plot = fig3_posterior_summaries %>%
 #6) Save plot
 ggview::ggview(reg_coverage_plot, height = 3, width = 6.5)
 save_plot_and_data(reg_coverage_plot, file_name = "plots/reg_coverage_plot",  height = 3, width = 6.5)
-save_plot_and_data(reg_coverage_plot, file_name = "ms/fig3reg_coverage_plot",  height = 3, width = 6.5)
+save_plot_and_data(reg_coverage_plot, file_name = "ms/Figure3", file_type = "pdf",  height = 3, width = 6.5)
